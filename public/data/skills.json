@@ -1,0 +1,20 @@
+[
+  {
+    "name": "TypeScript",
+    "status": "active",
+    "statusText": "Active use",
+    "url": "https://www.typescriptlang.org"
+  },
+  {
+    "name": "Kotlin",
+    "status": "learning",
+    "statusText": "Learning",
+    "url": "https://kotlinlang.org"
+  },
+  {
+    "name": "Rust",
+    "status": "learning",
+    "statusText": "Learning",
+    "url": "https://www.rust-lang.org"
+  }
+] 
