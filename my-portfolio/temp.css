@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 10, 10, 10;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, #0a2a1a33 0%, transparent 70%),
+              radial-gradient(ellipse at 100% 100%, #2a0a1a33 0%, transparent 70%),
+              #0a0a0a;
+}
+
+.glass-card {
+  background: rgba(32, 32, 32, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.online {
+  background-color: #4ade80;
+  box-shadow: 0 0 10px #4ade80;
+}
+
+.status-dot.offline {
+  background-color: #ef4444;
+  box-shadow: 0 0 10px #ef4444;
+}
+
+@layer components {
+  .project-card {
+    @apply relative rounded-xl border border-neutral-800 bg-neutral-900/30 p-6 shadow-xl backdrop-blur-md transition-all duration-300;
+  }
+
+  .skill-card {
+    @apply px-3 py-2 bg-gray-800 rounded-lg text-sm text-gray-300 hover:bg-gray-700 transition-colors;
+  }
+
+  .link-hover {
+    @apply hover:text-white transition-colors duration-200;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+} 
