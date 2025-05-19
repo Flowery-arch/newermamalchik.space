@@ -40,7 +40,7 @@ const projects: Project[] = [
     url: 'https://neweramamalchik.space/',
     description: 'Современное и адаптивное веб-портфолио, демонстрирующее мои навыки и ключевые проекты с акцентом на дизайн и производительность.',
     image: '/img/projects/bio.png',
-    logo: '/favicon.ico',
+    logo: '/popa.png',
     glowColor: 'bg-red-600',
     stack: {
     },
@@ -58,7 +58,7 @@ const projects: Project[] = [
     version: 'v1',
     url: 'https://neweramamalchik.space/',
     description: 'REST API, поддерживающий работу моего веб-портфолио, разработанный с использованием Bun и Elysia для высокой производительности и эффективности.',
-    logo: '/favicon.ico',
+    logo: '/popa.png',
     stack: {
       bun: 'v1.2',
       elysia: 'v1.2'

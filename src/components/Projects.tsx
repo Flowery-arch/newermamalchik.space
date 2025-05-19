@@ -39,7 +39,7 @@ export default function Projects() {
   const { t } = useLanguage();
 
   return (
-    <div className="easy-in-out grid gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 dark:ring-neutral-300/10 bg-card">
+    <div className="easy-in-out grid gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 dark:ring-neutral-300/10 bg-card h-full">
       <div className="flex items-center gap-2">
         <LucideFolder className="text-lg icon-primary" />
         <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">projects.tsx</h1>
@@ -49,7 +49,7 @@ export default function Projects() {
       <h1 className="text-xl font-bold text-neutral-800 dark:text-neutral-200 sm:text-2xl">{t('projects.title')}</h1>
 
       {/* Project List */}
-      <div className="grid gap-4">
+      <div className="grid gap-4 flex-grow">
         {projects.map((project) => (
           <div
             key={project.name}

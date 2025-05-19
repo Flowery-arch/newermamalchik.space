@@ -5,6 +5,7 @@ module.exports = {
     './src/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -20,11 +21,37 @@ module.exports = {
       },
       animation: {
         'glow': 'glow 2s ease-in-out infinite',
+        'float': 'float 3s ease-in-out infinite',
+        'themeTransition': 'themeTransition 500ms ease-in-out',
+        'typing': 'typing 3.5s steps(40, end)',
+        'blink': 'blink .75s step-end infinite',
       },
       keyframes: {
         glow: {
           '0%, 100%': { opacity: 1 },
           '50%': { opacity: 0.5 },
+        },
+        float: {
+          '0%, 100%': { 
+            transform: 'translateY(0) scale(1)',
+            boxShadow: '0 0 0 rgba(0,0,0,0)'
+          },
+          '50%': { 
+            transform: 'translateY(-5px) scale(1.02)',
+            boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
+          },
+        },
+        themeTransition: {
+          '0%': { opacity: 1 },
+          '100%': { opacity: 0 }
+        },
+        typing: {
+          'from': { width: '0' },
+          'to': { width: '100%' }
+        },
+        blink: {
+          'from, to': { borderColor: 'transparent' },
+          '50%': { borderColor: 'currentColor' }
         }
       },
       gridTemplateColumns: {

@@ -24,7 +24,7 @@ export default function WakaTime() {
       </div>
       <a
         className="flex items-center gap-1 text-neutral-800 dark:text-neutral-100"
-        href="https://newermamalchik.space"
+        href="https://neweramamalchik.space"
         target="_blank"
         rel="noopener noreferrer"
       >

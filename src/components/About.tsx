@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import TypingText from './TypingText';
 
 export default function About() {
   const [mounted, setMounted] = useState(false);
@@ -52,9 +53,9 @@ export default function About() {
         </div>
         <div className="flex flex-col gap-2 flex-1 min-w-0 text-center sm:text-left">
           <div className="flex items-baseline gap-2 flex-col sm:flex-row">
-            <h1 className="text-xl sm:text-2xl font-bold text-neutral-800 dark:text-neutral-200">{t('about.greeting')}</h1>
+            <TypingText text={t('about.greeting')} className="text-xl sm:text-2xl font-bold text-neutral-800 dark:text-neutral-200" />
             <div className="relative">
-              <span className="text-xl sm:text-2xl font-bold gradient-text">@newermamalchik</span>
+              <TypingText text="@newermamalchik" className="text-xl sm:text-2xl font-bold gradient-text" />
               <div className="absolute -inset-4 -z-10">
                 <div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-purple-500/40 via-blue-500/40 to-red-500/40 blur-2xl"></div>
               </div>
