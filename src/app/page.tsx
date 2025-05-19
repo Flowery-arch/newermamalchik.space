@@ -25,13 +25,13 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-0 md:min-h-screen bg-white dark:bg-[#0a0a0a] flex flex-col relative">
+    <main className="min-h-screen bg-white dark:bg-[#0a0a0a] flex flex-col relative">
       <div className="hidden md:block">
         <AnimatedBackground />
       </div>
       <ThemeTransition />
       
-      <div className="flex flex-col flex-grow-0 py-6 sm:py-8 md:py-12 items-start md:items-center">
+      <div className="flex flex-col flex-grow py-6 sm:py-8 md:py-12 items-start md:items-center">
         <div 
           className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 md:px-8 lg:px-12 mt-4 sm:mt-8 md:mt-16"
           style={{ transform: `translateY(${parallaxOffset}px)` }}
@@ -78,7 +78,7 @@ export default function Home() {
               }`}>
               <Projects />
               </div>
-              <div className="flex flex-col gap-3 sm:gap-4 md:gap-6 md:col-span-1 mb-8 sm:mb-0">
+              <div className="flex flex-col gap-3 sm:gap-4 md:gap-6 md:col-span-1">
                 <div className={`transition-all duration-500 ease-in-out hover:animate-float ${
                   isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}>
@@ -101,7 +101,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <footer className="w-full py-40 sm:py-4 md:py-6 text-center text-xs sm:text-sm text-neutral-500 dark:text-neutral-600">
+      <footer className="w-full py-4 text-center text-xs sm:text-sm text-neutral-500 dark:text-neutral-600 mt-auto">
         {t('footer.copyright')}
       </footer>
     </main>
