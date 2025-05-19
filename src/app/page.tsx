@@ -14,16 +14,16 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white dark:bg-[#0a0a0a] flex flex-col">
-      <div className="flex-grow flex items-center py-12">
-        <div className="mx-auto w-full max-w-[1600px] px-8 scale-90 mt-16">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_2fr_1fr]">
+      <div className="flex-grow flex items-center py-6 sm:py-12">
+        <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-8 scale-90 mt-8 sm:mt-16">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:gap-8 lg:grid-cols-[1fr_2fr_1fr]">
             {/* Left Column */}
             <div className="flex flex-col">
               <Projects />
             </div>
 
             {/* Center Column */}
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4 sm:gap-6">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <Clock />
                 <Weather />
@@ -40,7 +40,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <footer className="w-full py-6 text-center text-sm text-neutral-500 dark:text-neutral-600">
+      <footer className="w-full py-4 sm:py-6 text-center text-sm text-neutral-500 dark:text-neutral-600">
         {t('footer.copyright')}
       </footer>
     </main>

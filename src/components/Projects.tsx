@@ -57,39 +57,39 @@ export default function Projects() {
             }}
           >
             <a
-              className="easy-in-out rounded-xl shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 active:scale-98 active:opacity-80 dark:bg-neutral-950 dark:ring-neutral-300/10 grid gap-2 p-5"
+              className="easy-in-out rounded-xl shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 active:scale-98 active:opacity-80 dark:bg-neutral-950 dark:ring-neutral-300/10 grid gap-2 p-4 sm:p-5"
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
             >
-              <div className="flex items-center gap-2">
-                <p className="text-md font-semibold text-neutral-800 dark:text-neutral-100">{project.name}</p>
-                <p className="text-sm text-neutral-700 dark:text-neutral-400">/ {project.version}</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="text-sm sm:text-md font-semibold text-neutral-800 dark:text-neutral-100">{project.name}</p>
+                <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-400">/ {project.version}</p>
               </div>
               
               <div className="relative flex items-center gap-2">
                 <svg
                   className="glowing-circle pointer-events-none"
-                  height="15"
-                  width="15"
+                  height="12"
+                  width="12"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <circle
-                    cx="7"
-                    cy="7"
+                    cx="6"
+                    cy="6"
                     r="3"
                     fill={project.status.color}
                   />
                 </svg>
                 <p
-                  className="text-sm"
+                  className="text-xs sm:text-sm"
                   style={{ color: project.status.color }}
                 >
                   {project.status.text}
                 </p>
                 <div className="absolute">
                   <div
-                    className="size-20 rounded-full opacity-25 blur-[50px]"
+                    className="size-16 sm:size-20 rounded-full opacity-25 blur-[50px]"
                     style={{ backgroundColor: project.status.color }}
                   />
                 </div>

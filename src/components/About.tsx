@@ -38,37 +38,35 @@ export default function About() {
         <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('about.title')}</h1>
       </div>
       
-      <div className="relative flex flex-col items-center gap-6 md:flex-row">
-        <div className="flex items-center gap-6 w-full">
-          <div className="relative aspect-square w-40 overflow-hidden rounded-full ring-4 ring-purple-500/20 shrink-0">
-            <Image
-              src="https://cdn.discordapp.com/avatars/660534347429969931/a_95eb00e5856ddb138696fe51c6ea21be?size=1024"
-              alt="avatar"
-              fill
-              className="object-cover transition-transform duration-500 hover:scale-110"
-              quality={100}
-              priority
-            />
-            <div className="absolute inset-0 ring-1 ring-inset ring-white/10" />
-          </div>
-          <div className="flex flex-col gap-2 flex-1 min-w-0">
-            <div className="flex items-baseline gap-2">
-              <h1 className="text-2xl font-bold text-neutral-800 dark:text-neutral-200">{t('about.greeting')}</h1>
-              <div className="relative">
-                <span className="text-2xl font-bold gradient-text">@newermamalchik</span>
-                <div className="absolute -inset-4 -z-10">
-                  <div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-purple-500/40 via-blue-500/40 to-red-500/40 blur-2xl"></div>
-                </div>
+      <div className="flex items-center gap-6 w-full flex-col sm:flex-row">
+        <div className="relative aspect-square w-32 sm:w-40 overflow-hidden rounded-full ring-4 ring-purple-500/20 shrink-0">
+          <Image
+            src="https://cdn.discordapp.com/avatars/660534347429969931/a_95eb00e5856ddb138696fe51c6ea21be?size=1024"
+            alt="avatar"
+            fill
+            className="object-cover transition-transform duration-500 hover:scale-110"
+            quality={100}
+            priority
+          />
+          <div className="absolute inset-0 ring-1 ring-inset ring-white/10" />
+        </div>
+        <div className="flex flex-col gap-2 flex-1 min-w-0 text-center sm:text-left">
+          <div className="flex items-baseline gap-2 flex-col sm:flex-row">
+            <h1 className="text-xl sm:text-2xl font-bold text-neutral-800 dark:text-neutral-200">{t('about.greeting')}</h1>
+            <div className="relative">
+              <span className="text-xl sm:text-2xl font-bold gradient-text">@newermamalchik</span>
+              <div className="absolute -inset-4 -z-10">
+                <div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-purple-500/40 via-blue-500/40 to-red-500/40 blur-2xl"></div>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 mt-2">
-              <span className="button-base text-sm">TypeScript</span>
-              <span className="button-base text-sm">Vue</span>
-              <span className="button-base text-sm">Nuxt</span>
-              <span className="button-base text-sm">Tailwind</span>
-            </div>
-            <p className="text-md text-neutral-800 dark:text-neutral-200 mt-2">{t('about.description')}</p>
           </div>
+          <div className="flex flex-wrap gap-2 mt-2 justify-center sm:justify-start">
+            <span className="button-base text-sm">TypeScript</span>
+            <span className="button-base text-sm">Vue</span>
+            <span className="button-base text-sm">Nuxt</span>
+            <span className="button-base text-sm">Tailwind</span>
+          </div>
+          <p className="text-sm sm:text-md text-neutral-800 dark:text-neutral-200 mt-2">{t('about.description')}</p>
         </div>
       </div>
 
