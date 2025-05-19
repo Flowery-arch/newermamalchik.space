@@ -42,7 +42,7 @@ export default function Projects() {
     <div className="easy-in-out grid gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 dark:ring-neutral-300/10 bg-card">
       <div className="flex items-center gap-2">
         <LucideFolder className="text-lg icon-primary" />
-        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">projects.md</h1>
+        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">projects.tsx</h1>
       </div>
       
       {/* Main Block Title */}

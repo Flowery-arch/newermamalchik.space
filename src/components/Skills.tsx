@@ -39,7 +39,7 @@ export default function Skills() {
 
       <div className="flex items-center gap-2">
         <AlignLeft className="text-lg icon-primary" />
-        <h1 className="text-sm text-primary">skills.md</h1>
+        <h1 className="text-sm text-primary">skills.tsx</h1>
       </div>
 
       <h1 className="text-lg sm:text-xl font-bold text-primary">{t('skills.title')}</h1>

@@ -111,7 +111,7 @@ export default function Weather() {
     <div className="easy-in-out grid grid-rows-[auto_1fr] gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 dark:bg-neutral-900/10 dark:ring-neutral-300/10">
       <div className="flex items-center gap-2">
         <Cloud className="text-lg text-neutral-800 dark:text-neutral-100/70" />
-        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('weather.title')}</h1>
+        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('weather.celcius')}</h1>
       </div>
       <div className="flex min-h-[64px] items-center gap-5">
         <div className="flex flex-col">

@@ -35,7 +35,7 @@ export default function About() {
             d="M13 9h5.5L13 3.5V9M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2h9m3-4v-2H6v2h12"
           />
         </svg>
-        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('about.title')}</h1>
+        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('about.info')}</h1>
       </div>
       
       <div className="flex items-center gap-6 w-full flex-col sm:flex-row">

@@ -80,7 +80,7 @@ async function fetchYandexMusic() {
   }
 }
 
-export default function Spotify() {
+export default function Music() {
   const { t } = useLanguage();
   const [track, setTrack] = useState<Track | null>(null);
   const [loading, setLoading] = useState(true);
@@ -118,7 +118,7 @@ export default function Spotify() {
             d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12s12-5.4 12-12S18.66 0 12 0m5.521 17.34c-.24.359-.66.48-1.021.24c-2.82-1.74-6.36-2.101-10.561-1.141c-.418.122-.779-.179-.899-.539c-.12-.421.18-.78.54-.9c4.56-1.021 8.52-.6 11.64 1.32c.42.18.479.659.301 1.02m1.44-3.3c-.301.42-.841.6-1.262.3c-3.239-1.98-8.159-2.58-11.939-1.38c-.539.18-1.14-.12-1.32-.66c-.18-.54.12-1.14.66-1.32c4.26-1.26 9.6-.6 13.2 1.68c.539.3.719.841.419 1.321m.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721c-.18-.601.18-1.2.72-1.381c4.26-1.26 11.28-1.02 15.721 1.621c.539.3.719.96.419 1.5c-.42.659-1.26.88-1.859.52"
           />
         </svg>
-        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('spotify.title')}</h1>
+        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('music.title')}</h1>
       </div>
       <div className="flex items-center gap-4">
         {loading ? (
@@ -127,9 +127,9 @@ export default function Spotify() {
             </div>
             <div>
               <h1 className="text-md font-semibold dark:text-neutral-200">
-                {t('spotify.nothing_here')}
+                {t('music.nothing_here')}
               </h1>
-              <p className="text-xs font-semibold text-neutral-400">{t('spotify.not_found')}</p>
+              <p className="text-xs font-semibold text-neutral-400">{t('music.not_found')}</p>
             </div>
           </>
         ) : track ? (
@@ -157,9 +157,9 @@ export default function Spotify() {
               </div>
               <div className="flex-grow">
                 <h1 className="text-md font-semibold dark:text-neutral-200">
-                  {t('spotify.nothing_here')}
+                  {t('music.nothing_here')}
                 </h1>
-                <p className="text-xs font-semibold text-neutral-400">{t('spotify.placeholder_artist')}</p>
+                <p className="text-xs font-semibold text-neutral-400">{t('music.placeholder_artist')}</p>
               </div>
             </div>
             <div className="flex items-center gap-2 w-full">

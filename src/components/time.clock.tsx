@@ -26,7 +26,7 @@ export default function Clock() {
     <div className="easy-in-out grid grid-rows-[auto_1fr] gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 dark:bg-neutral-900/10 dark:ring-neutral-300/10">
       <div className="flex items-center gap-2">
         <ClockIcon className="text-lg text-neutral-800 dark:text-neutral-100/70" />
-        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">time.tsx</h1>
+        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">time.clock</h1>
       </div>
       <div className="flex flex-col justify-center gap-2">
         <p className="text-neutral-800 dark:text-neutral-100">{time}</p>

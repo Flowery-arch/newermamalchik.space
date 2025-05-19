@@ -6,7 +6,7 @@ export const translations = {
       failed: 'Failed to load weather'
     },
     footer: {
-      copyright: 'Copyright © 2025-2026 newermamalchik. All rights reserved. Downloading, copying and editing is prohibited!'
+      copyright: '© 2025-2026 newermamalchik. All rights reserved. Unauthorized downloading, copying, or editing is prohibited.'
     },
     languageToggle: 'English',
     about: {
@@ -54,8 +54,8 @@ export const translations = {
       failed: 'Failed to load statistics',
       thisWeek: 'This week'
     },
-    spotify: {
-      title: 'spotify.json',
+    music: {
+      title: 'music.js',
       nothing_here: "Hmm... It seems there's nothing here",
       not_found: 'Not found',
       placeholder_artist: 'Hmm... A cool artist could be here'
@@ -89,6 +89,9 @@ export const translations = {
       95: 'Thunderstorm',
       96: 'Thunderstorm with slight hail',
       99: 'Thunderstorm with heavy hail'
+    },
+    time: {
+      title: 'Current Time',
     }
   },
   ru: {
@@ -98,7 +101,7 @@ export const translations = {
       failed: 'Ошибка загрузки погоды'
     },
     footer: {
-      copyright: 'Copyright © 2025-2026 newermamalchik. Все права защищены. Скачивание, копирование и редактирование запрещено!'
+      copyright: '© 2025-2026 newermamalchik. Все права защищены. Несанкционированная загрузка, копирование или редактирование запрещены.'
     },
     languageToggle: 'Русский',
     about: {
@@ -146,8 +149,8 @@ export const translations = {
       failed: 'Ошибка загрузки статистики',
       thisWeek: 'За эту неделю'
     },
-    spotify: {
-      title: 'spotify.json',
+    music: {
+      title: 'music.js',
       nothing_here: 'Хмм... Похоже, здесь ничего нет',
       not_found: 'Не найдено',
       placeholder_artist: 'Тут мог быть классный исполнитель'
@@ -181,6 +184,9 @@ export const translations = {
       95: 'Гроза',
       96: 'Гроза с небольшим градом',
       99: 'Гроза с сильным градом'
+    },
+    time: {
+      title: 'Текущее время',
     }
   }
 }; 

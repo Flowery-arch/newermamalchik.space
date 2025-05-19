@@ -4,9 +4,9 @@ import About from '@/components/About';
 import Projects from '@/components/Projects';
 import Skills from '@/components/Skills';
 import Weather from '@/components/Weather';
-import Clock from '@/components/Clock';
+import TimeClock from '@/components/time.clock';
 import WakaTime from '@/components/WakaTime';
-import Spotify from '@/components/Spotify';
+import Music from '@/components/Music';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Home() {
@@ -19,13 +19,13 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-4 sm:gap-6 lg:gap-8">
             {/* Left Column */}
             <div className="flex flex-col gap-4 sm:gap-6">
-              {/* Spotify */}
+              {/* Music */}
               <div className="w-full transition duration-300 ease-in-out hover:scale-101">
-                <Spotify />
+                <Music />
               </div>
               {/* Weather, Clock, WakaTime */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 transition duration-300 ease-in-out hover:scale-101">
-                <Clock />
+                <TimeClock />
                 <Weather />
                 <WakaTime />
               </div>
