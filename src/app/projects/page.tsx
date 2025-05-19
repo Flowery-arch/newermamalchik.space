@@ -370,11 +370,11 @@ export default function ProjectsPage() {
               </div>
 
               <div className="grid justify-center gap-4 py-4 sm:justify-between lg:flex">
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2 sm:gap-4">
                   {['my', 'orders'].map((filter) => renderFilterButton(filter as FilterType))}
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2 sm:gap-4">
                   {['frontend', 'backend', 'other'].map((filter) => renderFilterButton(filter as FilterType))}
                 </div>
               </div>
@@ -421,8 +421,10 @@ export default function ProjectsPage() {
                                   />
                                 </div>
                               )}
-                              <p className="text-md font-semibold text-neutral-800 dark:text-neutral-100">{project.displayName}</p>
-                              <p className="text-sm text-neutral-700 dark:text-neutral-400">/ {project.version}</p>
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                                <p className="text-md font-semibold text-neutral-800 dark:text-neutral-100">{project.displayName}</p>
+                                <p className="text-sm text-neutral-700 dark:text-neutral-400">/ {project.version}</p>
+                              </div>
                             </div>
                           </div>
                         </div>

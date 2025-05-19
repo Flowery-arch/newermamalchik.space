@@ -12,7 +12,7 @@ export const translations = {
     about: {
       title: 'about.md',
       greeting: 'Greetings, I am',
-      description: "Hi! I'm 19 and (almost) a full-stack Typescript developer. I write frontend on Vue and Nuxt, backend and bots on Bun. I try Java for modding in my free time. I can make you a frontend, backend, or bot to order. If you're interested, contact me!",
+      description: "Hi! I am a fullstack developer (19 years old), I write in TypeScript (Vue/Next, Ban) and Java for modding. I create websites, backends, and bots — quickly and efficiently.",
       description_parts: {
         main: "I'm a developer from Russia, working primarily as a FullStack developer",
         parenthetical: "(but also have some DevOps experience)",
@@ -104,7 +104,7 @@ export const translations = {
     about: {
       title: 'about.md',
       greeting: 'Приветствую, я',
-      description: "Привет! Мне 19 и я (почти) фуллстак Typescript разработчик. Пишу фронтенд на Vue и Nuxt, бекенд и ботов на Bun. Пробую Java для моддинга в свободное время. Сделаю вам фронтенд, бекенд или бота на заказ. Если вы заинтересованы — свяжитесь со мной!",
+      description: "Привет! Я fullstack-разработчик (19 лет), пишу на TypeScript (Vue/Nuxt, Bun) и Java для моддинга. Создаю сайты, бекенды и ботов — быстро и качественно.",
       description_parts: {
         main: "Я разработчик из России, работаю в основном как FullStack",
         parenthetical: "(но также немного разбираюсь в DevOps)",
