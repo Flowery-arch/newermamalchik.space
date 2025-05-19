@@ -2,13 +2,31 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [
-      'images-ext-1.discordapp.net',
-      'github.com',
-      'avatars.githubusercontent.com',
-      'openweathermap.org',
-      'cdn.discordapp.com',
-      'media.discordapp.net'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images-ext-1.discordapp.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'github.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'openweathermap.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.discordapp.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.discordapp.net',
+      },
     ],
   },
 }

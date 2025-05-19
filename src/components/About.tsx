@@ -41,6 +41,9 @@ export default function About() {
       
       <div className="flex items-center gap-6 w-full flex-col sm:flex-row">
         <div className="relative aspect-square w-32 sm:w-40 overflow-hidden rounded-full ring-4 ring-purple-500/20 shrink-0">
+          <div className="absolute inset-[-8px] -z-10">
+            <div className="h-full w-full animate-pulse rounded-full bg-purple-500/40 blur-xl"></div>
+          </div>
           <Image
             src="https://cdn.discordapp.com/avatars/660534347429969931/a_95eb00e5856ddb138696fe51c6ea21be?size=1024"
             alt="avatar"
@@ -56,8 +59,8 @@ export default function About() {
             <TypingText text={t('about.greeting')} className="text-xl sm:text-2xl font-bold text-neutral-800 dark:text-neutral-200" />
             <div className="relative">
               <TypingText text="@newermamalchik" className="text-xl sm:text-2xl font-bold gradient-text" />
-              <div className="absolute -inset-4 -z-10">
-                <div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-purple-500/40 via-blue-500/40 to-red-500/40 blur-2xl"></div>
+              <div className="absolute -inset-24 -z-10">
+                <div className="h-full w-full animate-pulse bg-gradient-to-r from-yellow-400/20 via-orange-500/20 to-red-600/20 blur-2xl"></div>
               </div>
             </div>
           </div>

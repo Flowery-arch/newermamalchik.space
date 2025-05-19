@@ -19,6 +19,15 @@
   }
 }
 
+@keyframes animate-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 25% 50%;
+  }
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -188,5 +197,8 @@ body {
 }
 
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-500 via-blue-500 to-red-500;
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(to right, theme('colors.yellow.400'), theme('colors.orange.500'), theme('colors.red.600'), theme('colors.orange.500'), theme('colors.yellow.400'));
+  background-size: 400% 100%;
+  animation: animate-gradient-flow 10s linear infinite;
 } 

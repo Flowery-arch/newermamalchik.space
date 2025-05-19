@@ -363,7 +363,7 @@ export default function ProjectsPage() {
               </div>
             </motion.button>
 
-            <div className="easy-in-out grid grid-rows-[auto_1fr] gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 dark:ring-neutral-300/10 bg-white/80 dark:bg-neutral-900/10">
+            <div className="grid grid-rows-[auto_1fr] gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 dark:ring-neutral-300/10 bg-white/80 dark:bg-neutral-900/10">
               <div className="flex items-center gap-2">
                 <LucideFolder className="text-lg text-neutral-800 dark:text-neutral-100/70" />
                 <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">projects.md</h1>
@@ -565,7 +565,7 @@ export default function ProjectsPage() {
                   ))
                 ) : (
                   <div className="col-span-full flex items-center justify-center p-8">
-                    <p className="text-neutral-700 dark:text-neutral-300 text-lg">
+                    <p className="text-neutral-700 dark:text-neutral-300 text-sm">
                       {isOrdersActive ? "Нет проектов, соответствующих выбранным фильтрам" : "Нет проектов, соответствующих выбранным фильтрам"}
                     </p>
                   </div>
