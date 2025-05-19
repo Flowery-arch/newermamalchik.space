@@ -57,7 +57,8 @@ export const translations = {
     spotify: {
       title: 'spotify.json',
       nothing_here: "Hmm... It seems there's nothing here",
-      not_found: 'Not found'
+      not_found: 'Not found',
+      placeholder_artist: 'Hmm... A cool artist could be here'
     },
     weatherCodes: {
       0: 'Clear sky',
@@ -148,7 +149,8 @@ export const translations = {
     spotify: {
       title: 'spotify.json',
       nothing_here: 'Хмм... Похоже, здесь ничего нет',
-      not_found: 'Не найдено'
+      not_found: 'Не найдено',
+      placeholder_artist: 'Тут мог быть классный исполнитель'
     },
     weatherCodes: {
       0: 'Ясно',

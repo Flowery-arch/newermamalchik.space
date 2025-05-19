@@ -2,6 +2,7 @@
 
 import { LucideFolder, LucideList } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import Link from 'next/link';
 
 interface Project {
   name: string;
@@ -17,7 +18,7 @@ const projects: Project[] = [
   {
     name: 'Биография',
     version: 'v1',
-    url: 'https://newermamalchik.space',
+    url: 'https://neweramamalchik.space/',
     status: {
       color: '#07b97a',
       text: 'Done, getting updates'
@@ -38,14 +39,16 @@ export default function Projects() {
   const { t } = useLanguage();
 
   return (
-    <div className="easy-in-out grid grid-rows-[auto_1fr] gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 dark:ring-neutral-300/10 bg-card">
+    <div className="easy-in-out grid gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 dark:ring-neutral-300/10 bg-card">
       <div className="flex items-center gap-2">
         <LucideFolder className="text-lg icon-primary" />
         <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">projects.md</h1>
       </div>
       
+      {/* Main Block Title */}
       <h1 className="text-xl font-bold text-neutral-800 dark:text-neutral-200 sm:text-2xl">{t('projects.title')}</h1>
-      
+
+      {/* Project List */}
       <div className="grid gap-4">
         {projects.map((project) => (
           <div
@@ -99,14 +102,15 @@ export default function Projects() {
         ))}
       </div>
 
+      {/* Full List Section */}
       <div className="grid items-start">
         <h1 className="text-xl font-bold text-neutral-800 dark:text-neutral-200 sm:text-2xl">{t('projects.fullList')}</h1>
       </div>
 
       <div className="flex flex-row gap-4">
-        <a
-          className="easy-in-out rounded-xl shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 active:scale-98 active:opacity-80 dark:bg-neutral-950 dark:ring-neutral-300/10 grid gap-3 p-5"
+        <Link
           href="/projects"
+          className="easy-in-out rounded-xl shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 active:scale-98 active:opacity-80 dark:bg-neutral-950 dark:ring-neutral-300/10 grid gap-3 p-4 sm:p-5"
         >
           <div className="flex items-center gap-3">
             <LucideList className="text-lg text-neutral-800 dark:text-neutral-100/70" />
@@ -115,7 +119,7 @@ export default function Projects() {
           <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-400">
             {t('projects.description')}
           </p>
-        </a>
+        </Link>
       </div>
     </div>
   );

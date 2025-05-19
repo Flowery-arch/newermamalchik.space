@@ -61,16 +61,24 @@ export default function About() {
             </div>
           </div>
           <div className="flex flex-wrap gap-2 mt-2 justify-center sm:justify-start">
-            <span className="button-base text-sm">TypeScript</span>
-            <span className="button-base text-sm">Vue</span>
-            <span className="button-base text-sm">Nuxt</span>
-            <span className="button-base text-sm">Tailwind</span>
+            <a href="https://www.typescriptlang.org/" target="_blank" rel="noopener noreferrer" className="button-base text-sm hover:underline">
+              TypeScript
+            </a>
+            <a href="https://vuejs.org/" target="_blank" rel="noopener noreferrer" className="button-base text-sm hover:underline">
+              Vue
+            </a>
+            <a href="https://nuxt.com/" target="_blank" rel="noopener noreferrer" className="button-base text-sm hover:underline">
+              Nuxt
+            </a>
+            <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer" className="button-base text-sm hover:underline">
+              Tailwind
+            </a>
           </div>
           <p className="text-sm sm:text-md text-neutral-800 dark:text-neutral-200 mt-2">{t('about.description')}</p>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
         <a
           href="https://t.me/mkphotoss"
           target="_blank"
