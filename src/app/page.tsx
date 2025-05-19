@@ -50,17 +50,17 @@ export default function Home() {
                 <div className={`transition-all duration-500 ease-in-out hover:animate-float ${
                   isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}>
-                  <TimeClock />
+                <TimeClock />
                 </div>
                 <div className={`transition-all duration-500 ease-in-out hover:animate-float ${
                   isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}>
-                  <Weather />
+                <Weather />
                 </div>
                 <div className={`transition-all duration-500 ease-in-out hover:animate-float xs:col-span-2 sm:col-span-1 ${
                   isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}>
-                  <WakaTime />
+                <WakaTime />
                 </div>
               </div>
               {/* About */}
@@ -76,7 +76,7 @@ export default function Home() {
               <div className={`transition-all duration-500 ease-in-out hover:animate-float h-full ${
                 isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}>
-                <Projects />
+              <Projects />
               </div>
               <div className="flex flex-col gap-3 sm:gap-4 md:gap-6 md:col-span-1 mb-8 sm:mb-0">
                 <div className={`transition-all duration-500 ease-in-out hover:animate-float ${
