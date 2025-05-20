@@ -34,7 +34,42 @@ export const translations = {
       status: {
         active: 'Active',
         development: 'In Development',
-        planned: 'Planned'
+        planned: 'Planned',
+        done: 'Done, getting updates',
+        production: 'Production',
+        abandoned: 'Abandoned at copyright holder\'s request'
+      },
+      types: {
+        my: 'My Projects',
+        orders: 'Client Projects',
+        frontend: 'Frontend',
+        backend: 'Backend',
+        other: 'Other'
+      },
+      search: {
+        placeholder: './projects -name \'*\'',
+        noResults: 'No projects matching the selected filters'
+      },
+      sourceCode: {
+        closed: 'Source code closed'
+      },
+      back: {
+        projects: 'projects'
+      },
+      descriptions: {
+        biography: 'Modern and responsive web portfolio showcasing my skills and key projects with emphasis on design and performance.',
+        biographyApi: 'REST API supporting my web portfolio, developed using Bun and Elysia for high performance and efficiency.',
+        flowery: 'Innovative Minecraft project featuring unique functionality and modern web design for an engaging gaming experience.',
+        floweryApi: 'Backend system for the Flowery project, built with Bun and Elysia, managing user data, purchases, and server logic.',
+        floweryOrder: 'Innovative Minecraft project featuring unique functionality and modern web design for an engaging gaming experience.',
+        bloomia: 'Project abandoned at copyright holder\'s request.',
+        floweryDiscordBot: 'Discord bot for the Flowery project, developed using Node.js and Discord.js for server management and user interaction.'
+      },
+      displayNames: {
+        biography: 'Biography',
+        flowery: 'Flowery',
+        floweryorder: 'Flowery (Order)',
+        bloomia: 'Bloomia'
       }
     },
     skills: {
@@ -129,7 +164,42 @@ export const translations = {
       status: {
         active: 'Активен',
         development: 'В разработке',
-        planned: 'Запланирован'
+        planned: 'Запланирован',
+        done: 'Готов, получает обновления',
+        production: 'В продакшене',
+        abandoned: 'Заброшен по просьбе правообладателя'
+      },
+      types: {
+        my: 'Мои проекты',
+        orders: 'Клиентские проекты',
+        frontend: 'Фронтенд',
+        backend: 'Бэкенд',
+        other: 'Другое'
+      },
+      search: {
+        placeholder: './projects -name \'*\'',
+        noResults: 'Нет проектов, соответствующих выбранным фильтрам'
+      },
+      sourceCode: {
+        closed: 'Исходный код закрыт'
+      },
+      back: {
+        projects: 'проекты'
+      },
+      descriptions: {
+        biography: 'Современное и адаптивное веб-портфолио, демонстрирующее мои навыки и ключевые проекты с акцентом на дизайн и производительность.',
+        biographyApi: 'REST API, поддерживающий работу моего веб-портфолио, разработанный с использованием Bun и Elysia для высокой производительности и эффективности.',
+        flowery: 'Инновационный Minecraft проект, выделяющийся уникальными функциями и современным веб-дизайном для захватывающего игрового опыта.',
+        floweryApi: 'Бэкенд-система для проекта Flowery, разработанная на Bun и Elysia, управляющая пользовательскими данными, покупками и серверной логикой.',
+        floweryOrder: 'Инновационный Minecraft проект, выделяющийся уникальными функциями и современным веб-дизайном для захватывающего игрового опыта.',
+        bloomia: 'Проект заброшен по просьбе правообладателя.',
+        floweryDiscordBot: 'Discord бот для проекта Flowery, разработанный с использованием Node.js и Discord.js для управления сервером и взаимодействия с пользователями.'
+      },
+      displayNames: {
+        biography: 'Биография',
+        flowery: 'Flowery',
+        floweryorder: 'Flowery (Заказ)',
+        bloomia: 'Bloomia'
       }
     },
     skills: {

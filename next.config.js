@@ -28,6 +28,10 @@ const nextConfig = {
         hostname: 'media.discordapp.net',
       },
     ],
+    domains: [
+      's.wordpress.com',
+      // другие домены, если есть
+    ],
   },
 }
 

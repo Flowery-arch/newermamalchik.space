@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { translations } from '@/i18n/translations';
 
 type Language = 'en' | 'ru';
@@ -14,7 +14,23 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguageState] = useState<Language>('en');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Get language from localStorage or use browser language
+    const savedLanguage = localStorage.getItem('language') as Language;
+    const browserLanguage = navigator.language.startsWith('ru') ? 'ru' : 'en';
+    const initialLanguage = savedLanguage || browserLanguage;
+    
+    setLanguageState(initialLanguage);
+    setMounted(true);
+  }, []);
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    localStorage.setItem('language', lang);
+  };
 
   const t = (key: string) => {
     const keys = key.split('.');
@@ -27,6 +43,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     
     return value || key;
   };
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>

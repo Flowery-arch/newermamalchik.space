@@ -59,8 +59,8 @@ export default function About() {
             <TypingText text={t('about.greeting')} className="text-xl sm:text-2xl font-bold text-neutral-800 dark:text-neutral-200" />
             <div className="relative">
               <TypingText text="@newermamalchik" className="text-xl sm:text-2xl font-bold gradient-text" />
-              <div className="absolute -inset-24 -z-10">
-                <div className="h-full w-full animate-pulse bg-gradient-to-r from-yellow-400/20 via-orange-500/20 to-red-600/20 blur-2xl"></div>
+              <div className="absolute -inset-2 -z-10">
+                <div className="h-full w-full animate-pulse bg-gradient-to-r from-yellow-400/10 via-orange-500/10 to-red-600/10 blur-md"></div>
               </div>
             </div>
           </div>

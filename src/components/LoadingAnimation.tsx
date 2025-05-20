@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useTheme } from 'next-themes';
 
 const LoadingAnimation: React.FC = () => {
   const word = "L OADING"; // Word without dots
@@ -29,6 +30,15 @@ const LoadingAnimation: React.FC = () => {
   const cycleCurrent = useRef(0);
   const animationFrameId = useRef<number | null>(null);
   const dotsAnimationTimeout = useRef<number | null>(null);
+
+  const { resolvedTheme } = useTheme();
+  const [currentTheme, setCurrentTheme] = useState('dark'); // Default to dark
+
+  useEffect(() => {
+    if (resolvedTheme) {
+      setCurrentTheme(resolvedTheme);
+    }
+  }, [resolvedTheme]);
 
   const getChar = () => chars[Math.floor(Math.random() * chars.length)];
 
@@ -100,7 +110,7 @@ const LoadingAnimation: React.FC = () => {
   }, []); // Empty dependency array means this effect runs once on mount
 
   return (
-    <div className="loading-container">
+    <div className={`loading-container ${currentTheme === 'light' ? 'theme-light' : 'theme-dark'}`}>
       <div className="word">
         {lettersState.map((item, index) => (
           <span key={index} className={`${item.done ? 'done' : ''} ${item.isDot && item.animated ? 'dot-animated' : ''}`} style={item.isDot && item.animated && item.dotIndex !== undefined ? { animationDelay: `${item.dotIndex * 0.2}s` } : {}}>
@@ -118,7 +128,6 @@ const LoadingAnimation: React.FC = () => {
           left: 0;
           width: 100%;
           height: 100%;
-          background: #0a0a0a; /* Darker background */
           font-family: 'Source Code Pro', monospace;
           font-weight: 400;
           overflow: hidden;
@@ -128,13 +137,29 @@ const LoadingAnimation: React.FC = () => {
           z-index: 9999; /* Ensure it's on top */
         }
 
+        .theme-dark {
+            background: #0a0a0a; /* Darker background */
+        }
+
+        .theme-light {
+            background: #f0f0f0; /* Lighter background */
+        }
+
         .word {
           position: relative;
-          color: #ffffff; /* White text */
           font-size: 2.5em;
           line-height: 1em;
-          text-shadow: 0 0 10px rgba(255, 165, 0, 0.5), 0 0 5px rgba(255, 140, 0, 0.5); /* Orange glow */
           white-space: nowrap;
+        }
+
+        .theme-dark .word {
+            color: #ffffff; /* White text */
+            text-shadow: 0 0 10px rgba(255, 165, 0, 0.5), 0 0 5px rgba(255, 140, 0, 0.5); /* Orange glow */
+        }
+
+         .theme-light .word {
+            color: #333333; /* Dark text */
+            text-shadow: 0 0 10px rgba(0, 128, 0, 0.5), 0 0 5px rgba(0, 100, 0, 0.5); /* Green glow */
         }
 
         .word span {
@@ -147,17 +172,31 @@ const LoadingAnimation: React.FC = () => {
         }
 
         .word span.done {
-          color: #ffa500; /* Orange for done letters */
           transform: translateX(0) scale(1); /* Keep for letter animation */
+        }
+         .theme-dark .word span.done {
+            color: #ffa500; /* Orange for done letters */
+        }
+
+        .theme-light .word span.done {
+            color: #008000; /* Green for done letters */
         }
 
          /* Specific style for the animated dots */
         .word span.dot-animated {
              display: inline-block;
              opacity: 1;
-             color: #ffa500; /* Orange color for dots */
              animation: jump 0.6s ease-in-out infinite alternate;
         }
+
+        .theme-dark .word span.dot-animated {
+            color: #ffa500; /* Orange color for dots */
+        }
+
+        .theme-light .word span.dot-animated {
+            color: #008000; /* Green color for dots */
+        }
+
         .word span.dot-animated:nth-child(odd) {
              animation-delay: 0s;
         }
@@ -174,6 +213,10 @@ const LoadingAnimation: React.FC = () => {
           background-image: linear-gradient(transparent 50%, rgba(10, 10, 10, 0.3) 50%); /* Subtle scan line effect */
           background-size: 100% 2px; /* Horizontal lines */
           pointer-events: none;
+        }
+        
+        .theme-light .overlay {
+             background-image: linear-gradient(transparent 50%, rgba(200, 200, 200, 0.3) 50%); /* Subtle scan line effect for light theme */
         }
         
         /* Keyframes for jumping animation */
