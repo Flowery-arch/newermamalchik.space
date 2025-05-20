@@ -1,34 +1,70 @@
 'use client';
 
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useState, useEffect } from 'react';
+import { Clock } from 'lucide-react';
 
-export default function WakaTime() {
-  const { t } = useLanguage();
+export default function ComputerTime() {
+  const { t, language } = useLanguage();
+  const [timeSpent, setTimeSpent] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [isActiveHours, setIsActiveHours] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  
+  // Функция для получения данных о времени за компьютером
+  useEffect(() => {
+    // Проверяем, есть ли уже сохраненное время начала
+    let startTimestamp = localStorage.getItem('coding_start_time');
+    
+    // Если нет, создаем новое время начала и сохраняем его
+    if (!startTimestamp) {
+      startTimestamp = Date.now().toString();
+      localStorage.setItem('coding_start_time', startTimestamp);
+    }
+    
+    const startDate = new Date(parseInt(startTimestamp));
+    
+    const updateTime = () => {
+      const now = new Date();
+      const diffMs = now.getTime() - startDate.getTime();
+      
+      // Переводим миллисекунды в часы, минуты и секунды
+      const hours = Math.floor(diffMs / (1000 * 60 * 60));
+      const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+      
+      setTimeSpent({ hours, minutes, seconds });
+      
+      // Проверяем текущее время МСК для индикатора активности
+      const moscowHour = (now.getUTCHours() + 3) % 24; // МСК = UTC+3
+      setIsActiveHours(moscowHour >= 9 && moscowHour < 21);
+    };
+    
+    // Обновляем время каждую секунду
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  // Форматирование времени с учетом языка
+  const formattedTime = () => {
+    if (language === 'en') {
+      return `${timeSpent.hours}h ${timeSpent.minutes}m ${timeSpent.seconds}s`;
+    } else {
+      return `${timeSpent.hours}ч ${timeSpent.minutes}м ${timeSpent.seconds}с`;
+    }
+  };
+
+  // Цвет индикатора активности
+  const statusColor = isActiveHours ? '#07b97a' : '#ef4444';
 
   return (
     <div className="easy-in-out grid gap-2 rounded-xl p-4 shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 dark:bg-neutral-900/10 dark:ring-neutral-300/10">
       <div className="flex items-center gap-2">
-        <svg
-          className="text-lg text-neutral-800 dark:text-neutral-100/70"
-          xmlns="http://www.w3.org/2000/svg"
-          width="1em"
-          height="1em"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12s12-5.373 12-12S18.627 0 12 0m0 2.824a9.176 9.176 0 1 1 0 18.352a9.176 9.176 0 0 1 0-18.352m5.097 5.058c-.327 0-.61.19-.764.45c-1.025 1.463-2.21 3.162-3.288 4.706l-.387-.636a.9.9 0 0 0-.759-.439a.9.9 0 0 0-.788.492l-.357.581l-1.992-2.943a.9.9 0 0 0-.761-.446c-.514 0-.903.452-.903.96a1 1 0 0 0 .207.61l2.719 3.96c.152.272.44.47.776.47a.91.91 0 0 0 .787-.483c.046-.071.23-.368.314-.504l.324.52c-.035-.047.076.113.087.13c.024.031.054.059.078.085l.058.052c.036.033.08.056.115.08q.039.023.076.04q.045.02.088.035c.058.025.122.027.18.04c.031.004.064.003.092.005c.29 0 .546-.149.707-.36c1.4-2 2.842-4.055 4.099-5.849A1 1 0 0 0 18 8.842c0-.508-.389-.96-.903-.96"
-          />
-        </svg>
+        <Clock className="text-lg text-neutral-800 dark:text-neutral-100/70" size={18} />
         <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('codding.time')}</h1>
       </div>
-      <a
-        className="flex items-center gap-1 text-neutral-800 dark:text-neutral-100"
-        href="https://neweramamalchik.space"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {/* <span className="text-2xl animate-pulse">∞</span> */}
+      <div className="flex items-center gap-1">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 100 100"
@@ -52,8 +88,49 @@ export default function WakaTime() {
             />
           </path>
         </svg>
-        <span className="text-lg">hrs</span>
-      </a>
+        <div className="flex items-center gap-2">
+          <span className="text-lg text-neutral-800 dark:text-neutral-100">
+            {formattedTime()}
+          </span>
+          <div className="relative">
+            <div 
+              className="relative pointer-events-none"
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+              <svg
+                className="glowing-circle cursor-pointer"
+                height="12"
+                width="12"
+                xmlns="http://www.w3.org/2000/svg"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
+                <circle
+                  cx="6"
+                  cy="6"
+                  r="3"
+                  fill={statusColor}
+                />
+              </svg>
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10">
+                <div
+                  className="size-8 rounded-full opacity-25 blur-[20px]"
+                  style={{ backgroundColor: statusColor }}
+                />
+              </div>
+            </div>
+            {showTooltip && (
+              <div className="absolute z-10 -right-2 bottom-full mb-2 w-48 p-2 text-xs rounded-md bg-white dark:bg-neutral-800 shadow-lg ring-1 ring-neutral-500/20 dark:ring-neutral-300/10">
+                <p className="text-neutral-800 dark:text-neutral-200">
+                  {isActiveHours ? t('codding.active') : t('codding.inactive')}
+                </p>
+                <div className="absolute -bottom-1 right-2 w-2 h-2 bg-white dark:bg-neutral-800 transform rotate-45 ring-1 ring-neutral-500/20 dark:ring-neutral-300/10"></div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 } 

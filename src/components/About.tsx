@@ -1,6 +1,6 @@
 'use client';
 
-import { HelpCircle, Languages, Moon, Sun } from 'lucide-react';
+import { HelpCircle, Languages, Moon, Sun, User } from 'lucide-react';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
@@ -24,23 +24,15 @@ export default function About() {
   return (
     <div className="easy-in-out grid grid-rows-[auto_1fr] gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 dark:bg-neutral-900/10 dark:ring-neutral-300/10">
       <div className="flex items-center gap-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
+        <User
           className="text-lg text-neutral-800 dark:text-neutral-100/70"
-          width="1em"
-          height="1em"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            d="M13 9h5.5L13 3.5V9M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2h9m3-4v-2H6v2h12"
-          />
-        </svg>
-        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('about.info')}</h1>
+          size={18}
+        />
+        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('about.md')}</h1>
       </div>
       
       <div className="flex items-center gap-6 w-full flex-col sm:flex-row">
-        <div className="relative aspect-square w-32 sm:w-40 overflow-hidden rounded-full ring-4 ring-purple-500/20 shrink-0">
+        <div className="relative aspect-square w-32 sm:w-40 overflow-hidden rounded-full shrink-0">
           <div className="absolute inset-[-8px] -z-10">
             <div className="h-full w-full animate-pulse rounded-full bg-purple-500/40 blur-xl"></div>
           </div>
@@ -52,18 +44,16 @@ export default function About() {
             quality={100}
             priority
           />
-          <div className="absolute inset-0 ring-1 ring-inset ring-white/10" />
         </div>
         <div className="flex flex-col gap-2 flex-1 min-w-0 text-center sm:text-left">
-          <div className="flex items-baseline gap-2 flex-col sm:flex-row">
-            <TypingText text={t('about.greeting')} className="text-xl sm:text-2xl font-bold text-neutral-800 dark:text-neutral-200" />
-            <div className="relative">
-              <TypingText text="@newermamalchik" className="text-xl sm:text-2xl font-bold gradient-text" />
-              <div className="absolute -inset-2 -z-10">
-                <div className="h-full w-full animate-pulse bg-gradient-to-r from-yellow-400/10 via-orange-500/10 to-red-600/10 blur-md"></div>
-              </div>
-            </div>
+          <div className="flex flex-col sm:flex-row items-baseline gap-2 justify-center sm:justify-start">
+            <TypingText 
+              text={`${t('about.greeting')} ${t('about.name')}`} 
+              className="text-xl sm:text-2xl font-bold text-neutral-800 dark:text-neutral-200" 
+              nameHighlight={t('about.name')}
+            />
           </div>
+          
           <div className="flex flex-wrap gap-2 mt-2 justify-center sm:justify-start">
             <a href="https://www.typescriptlang.org/" target="_blank" rel="noopener noreferrer" className="button-base text-sm hover:underline">
               TypeScript

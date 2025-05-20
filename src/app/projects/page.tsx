@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import FallingSymbols from '@/components/FallingSymbols';
 import { useLanguage } from '@/contexts/LanguageContext';
+import DynamicTitle from '../../components/DynamicTitle';
 
 interface Project {
   name: string;
@@ -359,13 +360,8 @@ export default function ProjectsPage() {
   };
 
   return (
-    <motion.div 
-      className="min-h-screen bg-white/95 dark:bg-[#0a0a0a]/95 flex flex-col relative"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
-    >
+    <div className="relative flex min-h-screen flex-col bg-white dark:bg-[#0a0a0a] md:px-8 py-4 md:py-12">
+      <DynamicTitle titleRu="Проекты · newermamalchik" titleEn="Projects · newermamalchik" />
       <FallingSymbols />
       <div className="flex-grow flex items-center py-12 relative z-10">
         <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-8">
@@ -640,6 +636,6 @@ export default function ProjectsPage() {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 } 

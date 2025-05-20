@@ -88,10 +88,30 @@ body {
            duration-500 ease-in-out hover:scale-98 hover:opacity-80 
            active:scale-95 active:opacity-90 dark:bg-neutral-900/20 dark:ring-neutral-600/30;
   }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600;
+  }
 }
 
 @layer utilities {
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-red-500 to-teal-500;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
   }
 } 

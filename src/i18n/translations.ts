@@ -2,8 +2,12 @@ export const translations = {
   en: {
     weather: {
       title: 'weather.json',
+      ts: 'weather.ts',
       loading: 'Loading weather...',
-      failed: 'Failed to load weather'
+      failed: 'Failed to load weather',
+      celcius: 'Temperature',
+      wind: 'Wind',
+      windUnit: 'mph'
     },
     footer: {
       copyright: '© 2025-2026 newermamalchik. All rights reserved. Unauthorized downloading, copying, or editing is prohibited.'
@@ -11,12 +15,16 @@ export const translations = {
     languageToggle: 'English',
     about: {
       title: 'about.md',
+      md: 'about.md',
       greeting: 'Greetings, I am',
-      description: "Hi! I am a fullstack developer (19 years old), I write in TypeScript (Vue/Next, Ban) and Java for modding. I create websites, backends, and bots — quickly and efficiently.",
+      name: 'Mikhail',
+      aka: 'aka',
+      info: 'Personal Information',
+      description: "Hi! I'm a web developer (19 years old), specializing in TypeScript (Vue/Next.js) and Java for game modifications. I create websites, web applications and Discord bots — quickly and efficiently.",
       description_parts: {
-        main: "I'm a developer from Russia, working primarily as a FullStack developer",
-        parenthetical: "(but also have some DevOps experience)",
-        stack: ". My stack: Next.js for frontend and Bun (ElysiaJS) for backend."
+        main: "I'm a developer from Russia, focused primarily on web development",
+        parenthetical: "(with some backend and DevOps experience)",
+        stack: ". My stack: Next.js for frontend and occasionally Bun (ElysiaJS) for backend."
       },
       almost: '(almost)',
       little: '(a little)',
@@ -127,13 +135,27 @@ export const translations = {
     },
     time: {
       title: 'Current Time',
+    },
+    computer: {
+      time: 'Computer Time',
+      weekly: 'weekly average',
+      description: 'Time spent at computer'
+    },
+    codding: {
+      time: 'codding.time',
+      active: 'Active hours (9:00-21:00 MSK)',
+      inactive: 'Non-active hours (21:00-9:00 MSK)'
     }
   },
   ru: {
     weather: {
       title: 'weather.json',
+      ts: 'weather.ts',
       loading: 'Загрузка погоды...',
-      failed: 'Ошибка загрузки погоды'
+      failed: 'Ошибка загрузки погоды',
+      celcius: 'Температура',
+      wind: 'Ветер',
+      windUnit: 'м/с'
     },
     footer: {
       copyright: '© 2025-2026 newermamalchik. Все права защищены. Несанкционированная загрузка, копирование или редактирование запрещены.'
@@ -141,12 +163,16 @@ export const translations = {
     languageToggle: 'Русский',
     about: {
       title: 'about.md',
+      md: 'about.md',
       greeting: 'Приветствую, я',
-      description: "Привет! Я fullstack-разработчик (19 лет), пишу на TypeScript (Vue/Nuxt, Bun) и Java для моддинга. Создаю сайты, бекенды и ботов — быстро и качественно.",
+      name: 'Михаил',
+      aka: 'известный как',
+      info: 'Личная информация',
+      description: "Привет! Я веб-разработчик (19 лет), специализируюсь на TypeScript (Vue/Next.js) и Java для модификаций игр. Создаю сайты, веб-приложения и Discord ботов — быстро и качественно.",
       description_parts: {
-        main: "Я разработчик из России, работаю в основном как FullStack",
-        parenthetical: "(но также немного разбираюсь в DevOps)",
-        stack: ". Мой стек: Next.js для фронтенда и Bun (ElysiaJS) для бэкенда."
+        main: "Я разработчик из России, в основном занимаюсь веб-разработкой",
+        parenthetical: "(имею опыт с бэкендом и немного с DevOps)",
+        stack: ". Мой стек: Next.js для фронтенда и иногда Bun (ElysiaJS) для бэкенда."
       },
       almost: '(почти)',
       little: '(немного)',
@@ -257,6 +283,16 @@ export const translations = {
     },
     time: {
       title: 'Текущее время',
+    },
+    computer: {
+      time: 'Время за ПК',
+      weekly: 'в среднем за неделю',
+      description: 'Время, проведённое за компьютером'
+    },
+    codding: {
+      time: 'codding.time',
+      active: 'Активные часы (9:00-21:00 МСК)',
+      inactive: 'Неактивные часы (21:00-9:00 МСК)'
     }
   }
 }; 
