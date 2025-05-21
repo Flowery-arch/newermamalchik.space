@@ -25,6 +25,7 @@ module.exports = {
         'themeTransition': 'themeTransition 500ms ease-in-out',
         'typing': 'typing 3.5s steps(40, end)',
         'blink': 'blink .75s step-end infinite',
+        'fade-in-out': 'fadeInOut 3s ease-in-out forwards',
       },
       keyframes: {
         glow: {
@@ -52,6 +53,24 @@ module.exports = {
         blink: {
           'from, to': { borderColor: 'transparent' },
           '50%': { borderColor: 'currentColor' }
+        },
+        fadeInOut: {
+          '0%': {
+            opacity: 0,
+            transform: 'translate(-50%, 20px)'
+          },
+          '20%': {
+            opacity: 1,
+            transform: 'translate(-50%, 0)'
+          },
+          '80%': {
+            opacity: 1,
+            transform: 'translate(-50%, 0)'
+          },
+          '100%': {
+            opacity: 0,
+            transform: 'translate(-50%, -20px)'
+          },
         }
       },
       gridTemplateColumns: {

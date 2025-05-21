@@ -26,7 +26,7 @@ const baseMetadata: Metadata = {
   },
   verification: {
     google: "SIMg_VuH-oGhs7O2maxxffI1K2W_gUhVUV-jd-wO2q4",
-    yandex: "1da14f8acc23d50d",
+    yandex: "57626dcbaf3650bf",
   },
   category: "technology",
   icons: {

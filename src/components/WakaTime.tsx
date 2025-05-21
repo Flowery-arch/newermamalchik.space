@@ -2,49 +2,113 @@
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useState, useEffect } from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, RefreshCw } from 'lucide-react';
 
 export default function ComputerTime() {
   const { t, language } = useLanguage();
   const [timeSpent, setTimeSpent] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [isActiveHours, setIsActiveHours] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [resetting, setResetting] = useState(false);
+  const [showResetSuccess, setShowResetSuccess] = useState(false);
+  
+  // Проверка на админа (простая - по спец. комбинации клавиш)
+  useEffect(() => {
+    let keys: string[] = [];
+    const adminCode = 'adminreset';
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      keys.push(e.key.toLowerCase());
+      if (keys.length > adminCode.length) {
+        keys = keys.slice(-adminCode.length);
+      }
+      
+      const typed = keys.join('');
+      if (typed === adminCode) {
+        setIsAdmin(true);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
   
   // Функция для получения данных о времени за компьютером
   useEffect(() => {
-    // Проверяем, есть ли уже сохраненное время начала
-    let startTimestamp = localStorage.getItem('coding_start_time');
+    // Получаем начальное время с сервера
+    const fetchStartTime = async () => {
+      try {
+        const response = await fetch('/api/coding-time');
+        if (response.ok) {
+          const data = await response.json();
+          setStartTime(data.startTime);
+        } else {
+          console.error('Ошибка при получении времени');
+        }
+      } catch (error) {
+        console.error('Ошибка при запросе времени:', error);
+      }
+    };
     
-    // Если нет, создаем новое время начала и сохраняем его
-    if (!startTimestamp) {
-      startTimestamp = Date.now().toString();
-      localStorage.setItem('coding_start_time', startTimestamp);
-    }
-    
-    const startDate = new Date(parseInt(startTimestamp));
+    fetchStartTime();
     
     const updateTime = () => {
-      const now = new Date();
-      const diffMs = now.getTime() - startDate.getTime();
-      
-      // Переводим миллисекунды в часы, минуты и секунды
-      const hours = Math.floor(diffMs / (1000 * 60 * 60));
-      const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-      
-      setTimeSpent({ hours, minutes, seconds });
+      if (startTime) {
+        const now = new Date();
+        const diffMs = now.getTime() - startTime;
+        
+        // Переводим миллисекунды в часы, минуты и секунды
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+        
+        setTimeSpent({ hours, minutes, seconds });
+      }
       
       // Проверяем текущее время МСК для индикатора активности
+      const now = new Date();
       const moscowHour = (now.getUTCHours() + 3) % 24; // МСК = UTC+3
       setIsActiveHours(moscowHour >= 9 && moscowHour < 21);
     };
     
     // Обновляем время каждую секунду
-    updateTime();
     const interval = setInterval(updateTime, 1000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [startTime]);
+  
+  // Функция сброса времени (только для админа)
+  const resetTime = async () => {
+    if (!isAdmin) return;
+    
+    setResetting(true);
+    try {
+      const response = await fetch('/api/coding-time', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ startTime: Date.now() }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setStartTime(data.startTime);
+        
+        // Показываем уведомление об успешном сбросе
+        setShowResetSuccess(true);
+        setTimeout(() => {
+          setShowResetSuccess(false);
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Ошибка при сбросе времени:', error);
+    } finally {
+      setResetting(false);
+    }
+  };
   
   // Форматирование времени с учетом языка
   const formattedTime = () => {
@@ -59,10 +123,22 @@ export default function ComputerTime() {
   const statusColor = isActiveHours ? '#07b97a' : '#ef4444';
 
   return (
-    <div className="easy-in-out grid gap-2 rounded-xl p-4 shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 dark:bg-neutral-900/10 dark:ring-neutral-300/10">
-      <div className="flex items-center gap-2">
-        <Clock className="text-lg text-neutral-800 dark:text-neutral-100/70" size={18} />
-        <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('codding.time')}</h1>
+    <div className="easy-in-out relative grid gap-2 rounded-xl p-4 shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 dark:bg-neutral-900/10 dark:ring-neutral-300/10">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Clock className="text-lg text-neutral-800 dark:text-neutral-100/70" size={18} />
+          <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('codding.time')}</h1>
+        </div>
+        {isAdmin && (
+          <button
+            onClick={resetTime}
+            disabled={resetting}
+            className="text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors"
+            title={t('codding.reset')}
+          >
+            <RefreshCw size={16} className={resetting ? 'animate-spin' : ''} />
+          </button>
+        )}
       </div>
       <div className="flex items-center gap-1">
         <svg
@@ -131,6 +207,13 @@ export default function ComputerTime() {
           </div>
         </div>
       </div>
+      
+      {/* Уведомление об успешном сбросе */}
+      {showResetSuccess && (
+        <div className="fixed bottom-4 left-1/2 z-50 transform animate-fade-in-out rounded-md bg-green-500 px-4 py-2 text-sm text-white shadow-lg">
+          {t('codding.resetSuccess')}
+        </div>
+      )}
     </div>
   );
 } 

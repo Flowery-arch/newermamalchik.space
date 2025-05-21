@@ -144,7 +144,9 @@ export const translations = {
     codding: {
       time: 'codding.time',
       active: 'Active hours (9:00-21:00 MSK)',
-      inactive: 'Non-active hours (21:00-9:00 MSK)'
+      inactive: 'Non-active hours (21:00-9:00 MSK)',
+      reset: 'Reset counter',
+      resetSuccess: 'Counter reset successfully'
     }
   },
   ru: {
@@ -292,7 +294,9 @@ export const translations = {
     codding: {
       time: 'codding.time',
       active: 'Активные часы (9:00-21:00 МСК)',
-      inactive: 'Неактивные часы (21:00-9:00 МСК)'
+      inactive: 'Неактивные часы (21:00-9:00 МСК)',
+      reset: 'Сбросить счетчик',
+      resetSuccess: 'Счетчик успешно сброшен'
     }
   }
 }; 
