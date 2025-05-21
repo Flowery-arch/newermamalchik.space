@@ -170,12 +170,12 @@ export default function ComputerTime() {
           </span>
           <div className="relative">
             <div 
-              className="relative pointer-events-none"
+              className="relative"
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
             >
               <svg
-                className="glowing-circle cursor-pointer"
+                className="glowing-circle cursor-pointer pointer-events-auto"
                 height="12"
                 width="12"
                 xmlns="http://www.w3.org/2000/svg"

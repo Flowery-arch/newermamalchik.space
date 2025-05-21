@@ -620,7 +620,6 @@ export default function ProjectsPage() {
 
                       <p className="z-1 text-[13px] font-semibold text-neutral-700 dark:text-neutral-300">
                         {t(project.description)}
-                        {project.description}
                       </p>
                     </div>
                   </div>

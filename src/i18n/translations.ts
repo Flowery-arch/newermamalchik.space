@@ -65,13 +65,13 @@ export const translations = {
         projects: 'projects'
       },
       descriptions: {
-        biography: 'Modern and responsive web portfolio showcasing my skills and key projects with emphasis on design and performance.',
-        biographyApi: 'REST API supporting my web portfolio, developed using Bun and Elysia for high performance and efficiency.',
-        flowery: 'Innovative Minecraft project featuring unique functionality and modern web design for an engaging gaming experience.',
-        floweryApi: 'Backend system for the Flowery project, built with Bun and Elysia, managing user data, purchases, and server logic.',
-        floweryOrder: 'Innovative Minecraft project featuring unique functionality and modern web design for an engaging gaming experience.',
-        bloomia: 'Project abandoned at copyright holder\'s request.',
-        floweryDiscordBot: 'Discord bot for the Flowery project, developed using Node.js and Discord.js for server management and user interaction.'
+        biography: 'My digital business card and creative manifesto. A portfolio site that fully reflects my personality, where every detail is handcrafted. No templates — just pure code and unique design.',
+        biographyApi: 'The invisible but crucial backend for my portfolio. Custom API built on Bun+Elysia that flies like a rocket while consuming resources like a hummingbird. All so the frontend can feel like royalty.',
+        flowery: 'A Minecraft server infused with game design and attention to detail. Combines classic mechanics with custom features, wrapping it all in a stylish web interface. Not just a game — an entire ecosystem.',
+        floweryApi: 'A backend beast for Flowery that does it all: from processing microtransactions to synchronizing data between game worlds. Built on Bun+Elysia to be faster than wind and more reliable than rock.',
+        floweryOrder: 'Custom variant of the Flowery server with tailored features for the client. Adapted the base concept to specific requests while maintaining the balance between innovation and player-friendliness.',
+        bloomia: 'Project abandoned at copyright holder\'s request. A story of unfulfilled promises and bitter experience that made me a better developer and taught me to clearly establish agreements upfront.',
+        floweryDiscordBot: 'Not just a Discord bot but a full-fledged bridge between the game server and community. Automates routine tasks, entertains users, and makes server management so simple that even a cat could handle it.'
       },
       displayNames: {
         biography: 'Biography',
@@ -215,13 +215,13 @@ export const translations = {
         projects: 'проекты'
       },
       descriptions: {
-        biography: 'Современное и адаптивное веб-портфолио, демонстрирующее мои навыки и ключевые проекты с акцентом на дизайн и производительность.',
-        biographyApi: 'REST API, поддерживающий работу моего веб-портфолио, разработанный с использованием Bun и Elysia для высокой производительности и эффективности.',
-        flowery: 'Инновационный Minecraft проект, выделяющийся уникальными функциями и современным веб-дизайном для захватывающего игрового опыта.',
-        floweryApi: 'Бэкенд-система для проекта Flowery, разработанная на Bun и Elysia, управляющая пользовательскими данными, покупками и серверной логикой.',
-        floweryOrder: 'Инновационный Minecraft проект, выделяющийся уникальными функциями и современным веб-дизайном для захватывающего игрового опыта.',
-        bloomia: 'Проект заброшен по просьбе правообладателя.',
-        floweryDiscordBot: 'Discord бот для проекта Flowery, разработанный с использованием Node.js и Discord.js для управления сервером и взаимодействия с пользователями.'
+        biography: 'Моя цифровая визитка и творческий манифест. Сайт-портфолио, максимально отражающий мою личность, где каждая деталь проработана вручную. Никаких шаблонов — только чистый код и уникальный дизайн.',
+        biographyApi: 'Невидимый, но важный бэкенд для портфолио. Самописное API на Bun+Elysia, которое летает как ракета и потребляет ресурсы как колибри. Всё для того, чтобы фронтенд чувствовал себя королем.',
+        flowery: 'Майнкрафт-сервер, пропитанный геймдизайном и любовью к деталям. Совмещает классические механики с авторскими фишками, заворачивая всё это в стильный веб-интерфейс. Не просто игра — целая экосистема.',
+        floweryApi: 'Бэкенд-монстр для Flowery, который умеет всё: от обработки микротранзакций до синхронизации данных между игровыми мирами. Построен на Bun+Elysia, чтобы быть быстрее ветра и надёжнее скалы.',
+        floweryOrder: 'Заказной вариант сервера Flowery с кастомными фишками для клиента. Адаптировал базовую концепцию под специфические запросы, сохранив баланс между инновациями и удобством для игроков.',
+        bloomia: 'Проект заброшен по просьбе правообладателя. История с несбывшимися обещаниями и горьким опытом, который сделал меня лучшим разработчиком и научил чётко фиксировать договорённости на берегу.',
+        floweryDiscordBot: 'Не просто Discord-бот, а полноценный мост между игровым сервером и сообществом. Автоматизирует рутину, развлекает пользователей и делает управление сервером настолько простым, что справился бы даже кот.'
       },
       displayNames: {
         biography: 'Биография',
