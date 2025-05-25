@@ -1,125 +1,135 @@
 'use client'
 
-import { LucideFolder, LucideList } from 'lucide-react';
+import { LucideFolder, LucideGithub, LucideGlobe } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 interface Project {
   name: string;
-  version: string;
+  displayName?: string;
   url: string;
+  githubUrl?: string;
+  type: 'frontend' | 'backend' | 'fullstack';
+  stack: string[];
   status: {
     color: string;
     text: string;
+    type: 'active' | 'development' | 'done' | 'planned';
   };
+  descriptionKey: string;
 }
 
 const projects: Project[] = [
   {
-    name: 'Биография',
-    version: 'v1',
+    name: 'biography',
+    displayName: 'Portfolio',
     url: 'https://neweramamalchik.space/',
+    githubUrl: 'https://github.com/Flowery-arch/newermamalchik.space',
+    type: 'frontend',
+    stack: ['Next.js', 'TypeScript', 'Tailwind CSS'],
     status: {
       color: '#07b97a',
-      text: 'Done, getting updates'
-    }
-  },
-  {
-    name: 'Flowery',
-    version: 'v4',
-    url: 'https://flowerymc.online',
-    status: {
-      color: '#07b97a',
-      text: 'Done, getting updates'
-    }
+      text: 'projects.status.done',
+      type: 'done'
+    },
+    descriptionKey: 'projects.descriptions.biography'
   }
 ];
 
 export default function Projects() {
   const { t } = useLanguage();
+  const [gitVersion, setGitVersion] = useState('v0.0.0');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Функция для получения версии из API
+    async function fetchGitVersion() {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/git-version');
+        if (!response.ok) throw new Error('Failed to fetch version');
+        
+        const data = await response.json();
+        setGitVersion(data.version);
+      } catch (error) {
+        console.error('Failed to fetch git version:', error);
+        setGitVersion('v1.0.0');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchGitVersion();
+  }, []);
 
   return (
-    <div className="easy-in-out grid gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 dark:ring-neutral-300/10 bg-card h-full">
+    <div className="easy-in-out grid gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 dark:ring-neutral-300/10 bg-card w-full">
       <div className="flex items-center gap-2">
         <LucideFolder className="text-lg icon-primary" />
         <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">projects.tsx</h1>
       </div>
       
-      {/* Main Block Title */}
-      <h1 className="text-xl font-bold text-neutral-800 dark:text-neutral-200 sm:text-2xl">{t('projects.title')}</h1>
-
-      {/* Project List */}
-      <div className="grid gap-4 flex-grow">
+      <div className="grid gap-6">
         {projects.map((project) => (
-          <div
-            key={project.name}
-            style={{
-              willChange: 'transform',
-              transition: '2000ms cubic-bezier(0.215, 0.61, 0.355, 1)',
-              transform: 'perspective(2000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
-            }}
-          >
-            <a
-              className="easy-in-out rounded-xl shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 active:scale-98 active:opacity-80 dark:bg-neutral-950 dark:ring-neutral-300/10 grid gap-2 p-4 sm:p-5"
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-sm sm:text-md font-semibold text-neutral-800 dark:text-neutral-100">{project.name}</p>
-                <p className="text-xs sm:text-sm text-neutral-700 dark:text-neutral-400">/ {project.version}</p>
+          <div key={project.name} className="grid gap-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <h3 className="text-lg font-medium">
+                  {project.displayName || project.name}
+                </h3>
+                <span className="text-sm text-neutral-500">
+                  {isLoading ? '...' : gitVersion}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="size-2 rounded-full bg-emerald-500 shadow-[0_0_10px_#4ade80] animate-pulse" />
+              <span className="text-sm text-emerald-500">
+                {t(project.status.text)}
+              </span>
               </div>
               
-              <div className="relative flex items-center gap-2">
-                <svg
-                  className="glowing-circle pointer-events-none"
-                  height="12"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
+            <div className="flex flex-wrap gap-2">
+              {project.stack.map((tech) => (
+                <span
+                  key={tech}
+                  className="rounded-lg bg-neutral-100 px-3 py-1 text-sm text-neutral-600 ring-1 ring-neutral-200 dark:bg-neutral-800/50 dark:text-neutral-300 dark:ring-neutral-700"
                 >
-                  <circle
-                    cx="6"
-                    cy="6"
-                    r="3"
-                    fill={project.status.color}
-                  />
-                </svg>
-                <p
-                  className="text-xs sm:text-sm"
-                  style={{ color: project.status.color }}
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            <p className="text-sm text-neutral-800 dark:text-neutral-100/70">
+              {t(project.descriptionKey)}
+            </p>
+
+            <div className="flex gap-4 text-sm">
+              <Link 
+                href={project.url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-neutral-600 ring-1 ring-neutral-200 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-300 dark:ring-neutral-700 dark:hover:bg-neutral-800/50 dark:hover:text-neutral-100 transition-colors"
+              >
+                <LucideGlobe className="size-4" />
+                website
+              </Link>
+              {project.githubUrl && (
+                <Link 
+                  href={project.githubUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-neutral-600 ring-1 ring-neutral-200 hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-300 dark:ring-neutral-700 dark:hover:bg-neutral-800/50 dark:hover:text-neutral-100 transition-colors"
                 >
-                  {project.status.text}
-                </p>
-                <div className="absolute">
-                  <div
-                    className="size-16 sm:size-20 rounded-full opacity-25 blur-[50px]"
-                    style={{ backgroundColor: project.status.color }}
-                  />
-                </div>
+                  <LucideGithub className="size-4" />
+                  github
+                </Link>
+              )}
               </div>
-            </a>
           </div>
         ))}
-      </div>
-
-      {/* Full List Section */}
-      <div className="grid items-start">
-        <h1 className="text-xl font-bold text-neutral-800 dark:text-neutral-200 sm:text-2xl">{t('projects.fullList')}</h1>
-      </div>
-
-      <div className="flex flex-row gap-4">
-        <Link
-          href="/projects"
-          className="easy-in-out rounded-xl shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 active:scale-98 active:opacity-80 dark:bg-neutral-950 dark:ring-neutral-300/10 grid gap-3 p-4 sm:p-5"
-        >
-          <div className="flex items-center gap-3">
-            <LucideList className="text-lg text-neutral-800 dark:text-neutral-100/70" />
-            <p className="font-semibold text-neutral-800 dark:text-neutral-100">{t('projects.viewAll')}</p>
-          </div>
-          <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-400">
-            {t('projects.description')}
-          </p>
-        </Link>
       </div>
     </div>
   );

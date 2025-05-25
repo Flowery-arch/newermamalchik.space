@@ -8,17 +8,23 @@ import { useLanguage } from '@/contexts/LanguageContext';
 export default function DynamicTitle({ 
   titleRu, 
   titleEn,
+  titleJa,
   pageName = ''
 }: {
   titleRu: string;
   titleEn: string;
+  titleJa: string;
   pageName?: string;
 }) {
   const { language } = useLanguage();
   
   useEffect(() => {
     // Выбираем заголовок в зависимости от текущего языка
-    const title = language === 'ru' ? titleRu : titleEn;
+    const title = language === 'ru' 
+      ? titleRu 
+      : language === 'ja' 
+        ? titleJa 
+        : titleEn;
     
     // Если есть название страницы, добавляем его к заголовку
     const fullTitle = pageName 
@@ -27,7 +33,7 @@ export default function DynamicTitle({
     
     // Устанавливаем заголовок
     document.title = fullTitle;
-  }, [language, titleRu, titleEn, pageName]);
+  }, [language, titleRu, titleEn, titleJa, pageName]);
 
   return null; // Этот компонент не рендерит HTML
 } 

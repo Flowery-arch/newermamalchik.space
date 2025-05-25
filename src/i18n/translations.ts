@@ -152,7 +152,7 @@ export const translations = {
       reset: 'Reset counter',
       resetSuccess: 'Counter reset successfully',
       badge: 'CS2',
-      format: '{hours}h {minutes}m {seconds}s'
+      format: '{hours}h {minutes}m'
     },
     cs2: {
       online: 'Online',
@@ -342,7 +342,7 @@ export const translations = {
       reset: 'Сбросить счетчик',
       resetSuccess: 'Счетчик успешно сброшен',
       badge: 'CS2',
-      format: '{hours}ч {minutes}м {seconds}с'
+      format: '{hours}ч {minutes}м'
     },
     cs2: {
       online: 'В сети',
@@ -445,7 +445,7 @@ export const translations = {
         projects: 'プロジェクト'
       },
       descriptions: {
-        biography: '私のデジタル名刺と創造的なマニフェスト。私の個性を完全に反映したポートフォリオサイトで、すべての細部が手作業で作られています。テンプレートはなく、純粋なコードとユニークなデザインだけです。',
+        biography: 'デジタル名刺と創造的なマニフェスト。私の個性を完全に反映したポートフォリオサイトで、すべての細部が手作業で作られています。テンプレートはなく、純粋なコードとユニークなデザインだけです。',
         biographyApi: '私のポートフォリオの目に見えないが重要なバックエンド。Bun+Elysiaで構築されたカスタムAPIは、リソースをハミングバードのように消費しながらロケットのように飛びます。すべてはフロントエンドが王様のように感じるためです。',
         flowery: 'ゲームデザインと細部への注意が注入されたMinecraftサーバー。古典的なメカニクスとカスタム機能を組み合わせ、すべてをスタイリッシュなウェブインターフェースでラップしています。単なるゲームではなく、完全なエコシステムです。',
         floweryApi: 'マイクロトランザクションの処理からゲームワールド間のデータ同期まで、すべてを行うFloweryのバックエンドビースト。風よりも速く、岩よりも信頼性が高くなるようにBun+Elysiaで構築されています。',
@@ -532,7 +532,7 @@ export const translations = {
       reset: 'カウンターリセット',
       resetSuccess: 'カウンターのリセットに成功しました',
       badge: 'CS2',
-      format: '{hours}時間 {minutes}分 {seconds}秒'
+      format: '{hours}時間 {minutes}分'
     },
     cs2: {
       online: 'オンライン',
