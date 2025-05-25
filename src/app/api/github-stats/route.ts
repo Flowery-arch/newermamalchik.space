@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 // GitHub API URLs
 const GITHUB_API_BASE = 'https://api.github.com';
 const GITHUB_USERNAME = 'Flowery-arch';
+const REPO_NAME = 'newermamalchik.space';
 
 // Функция для безопасного выполнения fetch запроса с повторными попытками
 async function safeFetch(url: string, options = {}, retries = 3): Promise<Response> {
@@ -33,66 +34,41 @@ async function safeFetch(url: string, options = {}, retries = 3): Promise<Respon
 
 export async function GET() {
   try {
-    // Получаем данные о пользователе и репозиториях параллельно
-    const [userResponse, reposResponse, eventsResponse] = await Promise.all([
-      safeFetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}`),
-      safeFetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos`),
-      safeFetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/events?per_page=100`)
+    // Получаем данные о репозитории
+    const [repoResponse, commitsResponse] = await Promise.all([
+      safeFetch(`${GITHUB_API_BASE}/repos/${GITHUB_USERNAME}/${REPO_NAME}`),
+      safeFetch(`${GITHUB_API_BASE}/repos/${GITHUB_USERNAME}/${REPO_NAME}/commits?per_page=100`)
     ]);
 
-    const userData = await userResponse.json();
-    const reposData = await reposResponse.json();
-    const eventsData = await eventsResponse.json();
+    const repoData = await repoResponse.json();
+    const commitsData = await commitsResponse.json();
 
     // Рассчитываем статистику
-    const totalRepositories = reposData.length;
+    const totalRepositories = 1; // Только один репозиторий
+    const totalStars = repoData.stargazers_count;
+    const totalCommits = commitsData.length;
+    const totalPRs = 12; // Можно реализовать позже, если нужно
+    const totalContributions = 384; // Фиксированное значение
+    const totalFollowers = repoData.watchers_count;
     
-    // Подсчитываем звезды
-    const totalStars = reposData.reduce((total: number, repo: any) => 
-      total + repo.stargazers_count, 0);
-
-    // Получаем информацию о коммитах из данных о событиях
-    const pushEvents = eventsData.filter((event: any) => event.type === 'PushEvent');
-    
-    // Подсчитываем общее количество коммитов из push событий
-    const totalCommitsFromEvents = pushEvents.reduce((total: number, event: any) => 
-      total + (event.payload?.commits?.length || 0), 0);
-    
-    // Используем данные из событий или резервное значение, если нет данных
-    const totalCommits = totalCommitsFromEvents > 0 ? totalCommitsFromEvents : 142;
-    
-    // Для PR и контрибуций используем оценочные данные
-    const totalPRs = eventsData.filter((event: any) => 
-      event.type === 'PullRequestEvent').length || 12;
-    const totalContributions = userData.public_repos > 0 ? 385 : 0;
-    const totalFollowers = userData.followers || 0;
-    
-    // Создаем реальный график активности коммитов по дням
-    // Группируем события по дням за последние 2 недели
+    // Создаем график активности коммитов
     const now = new Date();
     const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
     
     // Инициализируем массив с нулями для последних 14 дней
     const activityByDay: number[] = Array(14).fill(0);
     
-    // Заполняем данными из push событий
-    pushEvents.forEach((event: any) => {
-      const eventDate = new Date(event.created_at);
-      if (eventDate >= twoWeeksAgo) {
-        // Рассчитываем индекс дня (0 = самый старый, 13 = сегодня)
-        const dayDiff = Math.floor((now.getTime() - eventDate.getTime()) / (24 * 60 * 60 * 1000));
+    // Распределяем коммиты по дням
+    commitsData.forEach((commit: any) => {
+      const commitDate = new Date(commit.commit.author.date);
+      if (commitDate >= twoWeeksAgo) {
+        const dayDiff = Math.floor((now.getTime() - commitDate.getTime()) / (24 * 60 * 60 * 1000));
         if (dayDiff >= 0 && dayDiff < 14) {
-          // Добавляем количество коммитов в этом событии
-          const dayIndex = 13 - dayDiff; // Переворачиваем, чтобы последние дни были справа
-          activityByDay[dayIndex] += event.payload?.commits?.length || 0;
+          const dayIndex = 13 - dayDiff;
+          activityByDay[dayIndex]++;
         }
       }
     });
-    
-    // Если нет данных о коммитах за последние 2 недели, используем примерные данные
-    const commitsByDay = activityByDay.some(count => count > 0)
-      ? activityByDay
-      : [2, 5, 3, 7, 9, 4, 6, 2, 8, 5, 3, 7, 4, 2];
 
     // Собираем данные в единый объект
     const stats = {
@@ -102,10 +78,9 @@ export async function GET() {
       totalCommits,
       totalPRs,
       totalFollowers,
-      commitsByDay,
+      commitsByDay: activityByDay,
     };
 
-    // Добавляем кэширование на 15 минут
     return NextResponse.json(stats, {
       headers: {
         'Cache-Control': 'public, s-maxage=900, stale-while-revalidate=1800',
@@ -116,13 +91,13 @@ export async function GET() {
     
     // Возвращаем резервные данные в случае ошибки
     return NextResponse.json({
-      totalContributions: 385,
-      totalRepositories: 1,
+      totalContributions: 0,
+      totalRepositories: 0,
       totalStars: 0,
-      totalCommits: 142,
-      totalPRs: 12,
+      totalCommits: 0,
+      totalPRs: 0,
       totalFollowers: 0,
-      commitsByDay: [2, 5, 3, 7, 9, 4, 6, 2, 8, 5, 3, 7, 4, 2]
+      commitsByDay: Array(14).fill(0)
     }, { status: 200 });
   }
 } 
