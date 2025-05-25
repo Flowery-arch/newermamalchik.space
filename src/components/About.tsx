@@ -21,13 +21,24 @@ export default function About() {
     return null;
   }
 
+  // Функция для циклического переключения языков: ru -> en -> ja -> ru
+  const cycleLanguage = () => {
+    if (language === 'ru') {
+      setLanguage('en');
+    } else if (language === 'en') {
+      setLanguage('ja');
+    } else {
+      setLanguage('ru');
+    }
+  };
+
   return (
     <div className="easy-in-out grid grid-rows-[auto_1fr] gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 dark:bg-neutral-900/10 dark:ring-neutral-300/10">
       <div className="flex items-center gap-2">
         <User
           className="text-lg text-neutral-800 dark:text-neutral-100/70"
           size={18}
-        />
+          />
         <h1 className="text-sm text-neutral-800 dark:text-neutral-100/70">{t('about.md')}</h1>
       </div>
       
@@ -107,7 +118,7 @@ export default function About() {
 
         <button 
           className="button-base w-fit"
-          onClick={() => setLanguage(language === 'en' ? 'ru' : 'en')}
+          onClick={cycleLanguage}
         >
           <div className="flex items-center gap-2">
             <Languages className="text-xl icon-primary" />

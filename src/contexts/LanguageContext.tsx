@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { translations } from '@/i18n/translations';
 
-type Language = 'en' | 'ru';
+type Language = 'en' | 'ru' | 'ja';
 
 interface LanguageContextType {
   language: Language;
@@ -14,13 +14,19 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('en');
+  const [language, setLanguageState] = useState<Language>('ru');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     // Get language from localStorage or use browser language
     const savedLanguage = localStorage.getItem('language') as Language;
-    const browserLanguage = navigator.language.startsWith('ru') ? 'ru' : 'en';
+    // Если язык браузера английский или японский, используем его,
+    // в остальных случаях используем русский по умолчанию
+    const browserLanguage = navigator.language.startsWith('en') 
+      ? 'en' 
+      : navigator.language.startsWith('ja') 
+        ? 'ja' 
+        : 'ru';
     const initialLanguage = savedLanguage || browserLanguage;
     
     setLanguageState(initialLanguage);

@@ -125,6 +125,36 @@ export default function Weather() {
     );
   }
 
+  // Выбор температуры в зависимости от языка
+  const getTemperatureDisplay = () => {
+    if (language === 'en') {
+      return (
+        <>
+          <p className="text-lg font-medium text-neutral-800 dark:text-neutral-100">
+            {weather.tempF}°F
+          </p>
+          <span className="text-xs text-neutral-500">({weather.temp}°C)</span>
+        </>
+      );
+    } else {
+      // Для русского и японского языков используем градусы Цельсия
+      return (
+        <p className="text-lg font-medium text-neutral-800 dark:text-neutral-100">
+          {weather.temp}°C
+        </p>
+      );
+    }
+  };
+
+  // Выбор скорости ветра в зависимости от языка
+  const getWindSpeedDisplay = () => {
+    if (language === 'en') {
+      return `${weather.windSpeedMph} ${t('weather.windUnit')}`;
+    } else {
+      return `${weather.windSpeed} ${t('weather.windUnit')}`;
+    }
+  };
+
   return (
     <div className="easy-in-out grid grid-rows-[auto_1fr] gap-4 rounded-xl p-6 shadow-lg ring-2 ring-neutral-500/20 duration-600 hover:scale-101 dark:bg-neutral-900/10 dark:ring-neutral-300/10">
       <div className="flex items-center gap-2">
@@ -134,18 +164,13 @@ export default function Weather() {
       <div className="grid grid-cols-[1fr_auto_auto] min-h-[64px] items-center gap-4">
         <div className="flex flex-col min-w-0">
           <div className="flex items-baseline gap-2">
-            <p className="text-lg font-medium text-neutral-800 dark:text-neutral-100">
-              {language === 'en' ? `${weather.tempF}°F` : `${weather.temp}°C`}
-            </p>
-            {language === 'en' && (
-              <span className="text-xs text-neutral-500">({weather.temp}°C)</span>
-            )}
+            {getTemperatureDisplay()}
           </div>
           <p className="text-[12px] font-semibold text-neutral-500 truncate" title={weather.description}>
             {weather.description}
           </p>
           <p className="text-[12px] text-neutral-500 mt-1">
-            {t('weather.wind')}: {language === 'en' ? weather.windSpeedMph : weather.windSpeed} {t('weather.windUnit')}
+            {t('weather.wind')}: {getWindSpeedDisplay()}
           </p>
         </div>
         <div className="h-12 w-px bg-neutral-800 dark:bg-neutral-200" />

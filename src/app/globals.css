@@ -201,4 +201,15 @@ body {
   background-image: linear-gradient(to right, theme('colors.yellow.400'), theme('colors.orange.500'), theme('colors.red.600'), theme('colors.orange.500'), theme('colors.yellow.400'));
   background-size: 400% 100%;
   animation: animate-gradient-flow 10s linear infinite;
+}
+
+/* Стили для выделения текста */
+::selection {
+  background-color: rgba(160, 160, 160, 0.3);
+  color: inherit;
+}
+
+.dark ::selection {
+  background-color: rgba(200, 200, 200, 0.3);
+  color: inherit;
 } 

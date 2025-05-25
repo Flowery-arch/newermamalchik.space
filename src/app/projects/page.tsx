@@ -77,7 +77,7 @@ const projects: Project[] = [
     name: 'flowery',
     displayName: 'Flowery',
     version: 'v4',
-    url: 'https://flowerymc.online',
+    url: 'https://flowerymc.online/',
     description: 'projects.descriptions.flowery',
     logo: 'https://images-ext-1.discordapp.net/external/rR0y_v-Ghc1rCpIt91lgqrbD5KL9Ba3c2jofWqIZ8XU/%3Fsize%3D1024/https/cdn.discordapp.com/icons/1144350058964336724/0a0c7ce9a2307601f5cfeb81ee8199fa.webp?format=webp&width=780&height=780',
     stack: {},
@@ -112,7 +112,7 @@ const projects: Project[] = [
     name: 'flowery-order',
     displayName: 'Flowery (Order)',
     version: 'v4',
-    url: 'https://flowerymc.online',
+    url: 'https://flowerymc.online/',
     description: 'projects.descriptions.floweryOrder',
     logo: 'https://images-ext-1.discordapp.net/external/rR0y_v-Ghc1rCpIt91lgqrbD5KL9Ba3c2jofWqIZ8XU/%3Fsize%3D1024/https/cdn.discordapp.com/icons/1144350058964336724/0a0c7ce9a2307601f5cfeb81ee8199fa.webp?format=webp&width=780&height=780',
     stack: {},
@@ -128,7 +128,7 @@ const projects: Project[] = [
     name: 'bloomia',
     displayName: 'Bloomia',
     version: 'v1',
-    url: '#', // Замените на реальный URL, если есть
+    url: 'https://neweramamalchik.space/',
     description: 'projects.descriptions.bloomia',
     logo: '/img/7921a645b3f27c092ef637a48b4d8814ecef54d29e4e8834f1d51bab9729b88e.png',
     stack: {},
@@ -144,7 +144,7 @@ const projects: Project[] = [
     name: 'flowery-discord-bot',
     displayName: 'Flowery Discord Bot',
     version: 'v1',
-    url: '#', // Замените на реальный URL, если есть
+    url: 'https://neweramamalchik.space/',
     description: 'projects.descriptions.floweryDiscordBot',
     logo: 'https://images-ext-1.discordapp.net/external/rR0y_v-Ghc1rCpIt91lgqrbD5KL9Ba3c2jofWqIZ8XU/%3Fsize%3D1024/https/cdn.discordapp.com/icons/1144350058964336724/0a0c7ce9a2307601f5cfeb81ee8199fa.webp?format=webp&width=780&height=780',
     stack: {
