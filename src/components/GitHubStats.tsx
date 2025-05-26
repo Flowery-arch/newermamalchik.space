@@ -16,7 +16,7 @@ interface GitHubStats {
 // Резервные данные, если API недоступен
 const FALLBACK_STATS: GitHubStats = {
   totalContributions: 385,
-  totalRepositories: 1,
+  totalRepositories: 17,
   totalStars: 0,
   totalCommits: 142,
   totalPRs: 12,

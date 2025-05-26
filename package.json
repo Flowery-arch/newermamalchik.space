@@ -25,6 +25,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "ws": "^8.18.2",
+    "yandex-music": "^1.7.0",
     "yandex-music-client": "^0.4.3"
   },
   "devDependencies": {
