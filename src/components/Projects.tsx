@@ -91,11 +91,11 @@ export default function Projects() {
               </span>
               </div>
               
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-nowrap gap-3">
               {project.stack.map((tech) => (
                 <span
                   key={tech}
-                  className="rounded-lg bg-neutral-100 px-3 py-1 text-sm text-neutral-600 ring-1 ring-neutral-200 dark:bg-neutral-800/50 dark:text-neutral-300 dark:ring-neutral-700"
+                  className="button-base text-[15px] whitespace-nowrap px-2.5 py-0.5"
                 >
                   {tech}
                 </span>
