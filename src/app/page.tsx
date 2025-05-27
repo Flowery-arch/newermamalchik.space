@@ -11,8 +11,6 @@ import Course from '@/components/course';
 import RandomQuote from '@/components/RandomQuote';
 import ToolsAndTechnologies from '@/components/ToolsAndTechnologies';
 import ThemeTransition from '@/components/ThemeTransition';
-import SwipeIndicator from '@/components/SwipeIndicator';
-import TetrisDemo from '@/components/TetrisDemo';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useParallax } from '@/hooks/useParallax';
 import FallingSymbols from '@/components/FallingSymbols';
@@ -40,7 +38,6 @@ export default function Home() {
         titleEn="Portfolio · newermamalchik" 
         titleJa="ポートフォリオ · newermamalchik"
       />
-      <SwipeIndicator onPageChange={setShowTetris} />
       
           <FallingSymbols />
           <ThemeTransition />
@@ -147,7 +144,6 @@ export default function Home() {
               className="w-full min-h-screen flex flex-col items-center justify-center p-4 sm:p-6"
             >
               <div className="w-full max-w-lg mx-auto">
-                <TetrisDemo />
               </div>
             </motion.div>
           )}
