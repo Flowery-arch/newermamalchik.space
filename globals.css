@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 10, 10, 10;
+}
+
+body {
+  @apply min-h-screen text-neutral-800 dark:text-neutral-300;
+  background: #0a0a0a;
+}
+
+.glass-card {
+  @apply relative rounded-xl border border-neutral-800 bg-neutral-900/30 p-6 backdrop-blur-md transition-all duration-300;
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.3), 0 1.5px 0 0 rgba(255, 255, 255, 0.1) inset;
+}
+
+.file-header {
+  @apply flex items-center gap-2 mb-2;
+}
+
+.file-header-text {
+  @apply text-sm text-neutral-800 dark:text-neutral-100/70;
+}
+
+.status-indicator {
+  @apply pointer-events-none;
+}
+
+.status-active {
+  @apply bg-emerald-500;
+  box-shadow: 0 0 10px #4ade80;
+}
+
+.status-learning {
+  @apply bg-orange-500;
+  box-shadow: 0 0 10px #f97316;
+}
+
+.status-not-supported {
+  @apply bg-red-500;
+  box-shadow: 0 0 10px #ef4444;
+}
+
+.version-tag {
+  @apply text-sm text-neutral-500;
+}
+
+@layer components {
+  .easy-in-out {
+    @apply duration-500 ease-in-out;
+  }
+
+  .card-base {
+    @apply rounded-xl shadow-lg ring-2 ring-neutral-500/20 dark:bg-neutral-900/10 dark:ring-neutral-300/10;
+  }
+
+  .card-hover {
+    @apply hover:scale-101 duration-500 ease-in-out;
+  }
+
+  .heading {
+    @apply text-xl font-semibold text-neutral-800 sm:text-2xl dark:text-neutral-200;
+  }
+
+  .project-item {
+    @apply rounded-xl shadow-lg ring-2 ring-neutral-500/20 duration-500 hover:scale-101 
+           active:scale-98 active:opacity-80 dark:bg-neutral-950 dark:ring-neutral-300/10 
+           grid gap-2 p-5;
+  }
+
+  .status-text {
+    @apply text-sm;
+  }
+
+  .glow-effect {
+    @apply absolute inset-0 flex items-center justify-center;
+  }
+
+  .glow-circle {
+    @apply size-20 rounded-full opacity-25 blur-[50px];
+  }
+
+  .button-base {
+    @apply cursor-pointer rounded-xl bg-neutral-100/20 ring-2 ring-neutral-400/30 
+           duration-500 ease-in-out hover:scale-98 hover:opacity-80 
+           active:scale-95 active:opacity-90 dark:bg-neutral-900/20 dark:ring-neutral-600/30;
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-red-500 to-teal-500;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+} 

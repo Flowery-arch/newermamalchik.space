@@ -1,0 +1,30 @@
+{
+  "name": "Портфолио · newermamalchik",
+  "short_name": "newermamalchik",
+  "description": "Web developer portfolio showcasing TypeScript, Vue/Next.js, and Java projects.",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#0a0a0a",
+  "display": "standalone",
+  "start_url": "/",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "ru-RU",
+  "dir": "ltr",
+  "categories": ["portfolio", "development", "technology"],
+  "shortcuts": [
+    {
+      "name": "Проекты",
+      "short_name": "Проекты",
+      "description": "Просмотр моих проектов",
+      "url": "/projects",
+      "icons": [{ "src": "/favicon.ico", "sizes": "48x48" }]
+    }
+  ]
+} 

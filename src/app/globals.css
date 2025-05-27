@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes animate-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 25% 50%;
+  }
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+.dark {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  min-height: 100vh;
+}
+
+.glass-card {
+  @apply relative rounded-xl border bg-white/30 p-6 backdrop-blur-md transition-all duration-300 border-neutral-200
+    dark:border-neutral-800 dark:bg-neutral-900/30;
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.1), 0 1.5px 0 0 rgba(255, 255, 255, 0.1) inset;
+}
+
+.file-header {
+  @apply flex items-center gap-2 text-neutral-800 dark:text-neutral-100/70;
+}
+
+.file-icon {
+  @apply text-lg;
+}
+
+.file-name {
+  @apply text-sm;
+}
+
+.status-dot {
+  @apply pointer-events-none size-[6px] rounded-full;
+}
+
+.status-active {
+  @apply bg-emerald-500;
+  box-shadow: 0 0 10px #4ade80;
+}
+
+.status-learning {
+  @apply bg-orange-500;
+  box-shadow: 0 0 10px #f97316;
+}
+
+.status-not-supported {
+  @apply bg-red-500;
+  box-shadow: 0 0 10px #ef4444;
+}
+
+.version-tag {
+  @apply text-sm text-neutral-500;
+}
+
+@layer components {
+  .card-base {
+    @apply rounded-xl bg-white/50 p-6 shadow-lg ring-2 ring-neutral-200/50 backdrop-blur-md transition-all duration-500 hover:scale-[1.01] 
+      dark:bg-neutral-900/10 dark:ring-neutral-700/30;
+  }
+
+  .file-header {
+    @apply flex items-center gap-2 text-neutral-800 dark:text-neutral-100/70;
+  }
+
+  .file-icon {
+    @apply text-lg;
+  }
+
+  .file-name {
+    @apply text-sm;
+  }
+
+  .status-dot {
+    @apply pointer-events-none size-[6px] rounded-full;
+  }
+
+  .status-active {
+    @apply bg-emerald-500;
+    box-shadow: 0 0 10px #4ade80;
+  }
+
+  .status-learning {
+    @apply bg-orange-500;
+    box-shadow: 0 0 10px #f97316;
+  }
+
+  .status-not-supported {
+    @apply bg-red-500;
+    box-shadow: 0 0 10px #ef4444;
+  }
+
+  .button-base {
+    @apply cursor-pointer rounded-xl bg-neutral-100/20 px-4 py-2 ring-2 ring-neutral-400/30 transition-all duration-500 
+      hover:scale-[0.98] hover:opacity-80 active:scale-95 active:opacity-90 
+      dark:bg-neutral-900/20 dark:ring-neutral-700/30;
+  }
+
+  .glow-effect {
+    @apply absolute inset-0 flex items-center justify-center;
+  }
+
+  .glow-circle {
+    @apply size-20 rounded-full opacity-25 blur-[50px];
+  }
+
+  .heading {
+    @apply text-xl font-semibold text-neutral-900 sm:text-2xl 
+      dark:text-neutral-200/90;
+  }
+
+  .text-primary {
+    @apply text-neutral-900 dark:text-neutral-200/90;
+  }
+
+  .text-secondary {
+    @apply text-neutral-700 dark:text-neutral-300/80;
+  }
+
+  .text-muted {
+    @apply text-neutral-500 dark:text-neutral-400/70;
+  }
+
+  .icon-primary {
+    @apply text-neutral-900 dark:text-neutral-200/80;
+  }
+
+  .icon-secondary {
+    @apply text-neutral-700 dark:text-neutral-300/70;
+  }
+
+  .bg-card {
+    @apply bg-white/50 dark:bg-neutral-900/10;
+  }
+
+  .border-card {
+    @apply border-neutral-200/50 dark:border-neutral-700/30;
+  }
+
+  .ring-card {
+    @apply ring-neutral-200/50 dark:ring-neutral-700/30;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-white via-red-500 to-teal-500 bg-clip-text text-transparent;
+  }
+
+  .hover\:scale-101 {
+    --tw-scale-x: 1.01;
+    --tw-scale-y: 1.01;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .easy-in-out {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(to right, theme('colors.yellow.400'), theme('colors.orange.500'), theme('colors.red.600'), theme('colors.orange.500'), theme('colors.yellow.400'));
+  background-size: 400% 100%;
+  animation: animate-gradient-flow 10s linear infinite;
+}
+
+/* Стили для выделения текста */
+::selection {
+  background-color: rgba(160, 160, 160, 0.3);
+  color: inherit;
+}
+
+.dark ::selection {
+  background-color: rgba(200, 200, 200, 0.3);
+  color: inherit;
+} 
