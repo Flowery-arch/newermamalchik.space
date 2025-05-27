@@ -54,14 +54,14 @@ export default function Music() {
           console.error('Error fetching track:', err);
           // Увеличиваем интервал при ошибке
           clearInterval(intervalId);
-          intervalId = setInterval(fetchTrack, 5000); // Увеличиваем до 5 секунд при ошибке
+          intervalId = setInterval(fetchTrack, 2000); // Увеличиваем до 2 секунд при ошибке
         }
       } finally {
         if (isMounted) setLoading(false);
       }
     };
     fetchTrack();
-    intervalId = setInterval(fetchTrack, 500); // раз в 0.5 секунды
+    intervalId = setInterval(fetchTrack, 1000); // раз в 1 секунды
     return () => {
       isMounted = false;
       clearInterval(intervalId);
