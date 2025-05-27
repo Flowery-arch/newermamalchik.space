@@ -1,7 +1,7 @@
 'use client';
 
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Track {
   title: string;
@@ -18,16 +18,15 @@ export default function Music() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [retryCount, setRetryCount] = useState(0);
-  const maxRetries = 5;
 
-  const setupSSE = useCallback(() => {
-    const eventSource = new EventSource('/api/current-track?sse=true');
-
-    eventSource.onmessage = (event) => {
+  useEffect(() => {
+    let intervalId;
+    let isMounted = true;
+    const fetchTrack = async () => {
       try {
-        const data = JSON.parse(event.data);
-
+        const res = await fetch('/api/current-track');
+        const data = await res.json();
+        if (!isMounted) return;
         if (data.success) {
           if (data.track) {
             const trackData = {
@@ -41,7 +40,6 @@ export default function Music() {
             setTrack(trackData);
             setError(false);
             setImageError(false);
-            setRetryCount(0); // Reset retry count on successful connection
           } else {
             setTrack(null);
             setError(false);
@@ -50,36 +48,18 @@ export default function Music() {
           setError(true);
         }
       } catch (err) {
-        setError(true);
+        if (isMounted) setError(true);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
-
-    eventSource.onerror = () => {
-      eventSource.close();
-      setError(true);
-      setLoading(false);
-
-      // Implement exponential backoff for reconnection
-      if (retryCount < maxRetries) {
-        const backoffTime = Math.min(1000 * Math.pow(2, retryCount), 30000);
-        setTimeout(() => {
-          setRetryCount(prev => prev + 1);
-          setupSSE();
-        }, backoffTime);
-      }
-    };
-
-    return eventSource;
-  }, [retryCount]);
-
-  useEffect(() => {
-    const eventSource = setupSSE();
+    fetchTrack();
+    intervalId = setInterval(fetchTrack, 5000); // раз в 5 секунд
     return () => {
-      eventSource.close();
+      isMounted = false;
+      clearInterval(intervalId);
     };
-  }, [setupSSE]);
+  }, []);
 
   const formatDuration = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
@@ -207,7 +187,7 @@ export default function Music() {
                   ) : (
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M8 5v14l11-7z" />
-                    </svg>
+                  </svg>
                   )}
                 </div>
                 <div className="flex-grow flex items-center gap-2">
