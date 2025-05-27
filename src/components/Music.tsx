@@ -61,7 +61,7 @@ export default function Music() {
       }
     };
     fetchTrack();
-    intervalId = setInterval(fetchTrack, 2000); // раз в 2 секунды
+    intervalId = setInterval(fetchTrack, 500); // раз в 0.5 секунды
     return () => {
       isMounted = false;
       clearInterval(intervalId);
