@@ -55,19 +55,8 @@ export default function ComputerTime() {
   
   // Подключение к SSE и получение обновлений в реальном времени
   useEffect(() => {
-    // Начальная загрузка данных
-    const fetchInitialData = async () => {
-      try {
-        const response = await fetch('/api/steam-time');
-        const data = await response.json();
-        if (data.success) {
-          updateSteamData(data);
-        }
-      } catch (error) {
-        console.error('Ошибка при начальной загрузке:', error);
-        setSteamData(prev => ({ ...prev, loading: false, error: true }));
-      }
-    };
+    let intervalId;
+    let isMounted = true;
 
     // Функция обновления данных
     const updateSteamData = (data: any) => {
@@ -79,53 +68,35 @@ export default function ComputerTime() {
         loading: false,
         error: false
       });
-      
       setTimeSpent({
         hours: data.totalHours,
         minutes: data.totalMinutes
       });
-      
       setGameName(data.gameName || 'Counter-Strike 2');
       setIsActiveHours(data.isOnline);
     };
 
-    // Загружаем начальные данные
-    fetchInitialData();
-
-    // Устанавливаем SSE подключение
-    const eventSource = new EventSource('/api/steam-time');
-
-    eventSource.onmessage = (event) => {
+    const fetchSteam = async () => {
       try {
-        const data = JSON.parse(event.data);
+        const response = await fetch('/api/steam-time');
+        const data = await response.json();
+        if (!isMounted) return;
         if (data.success) {
           updateSteamData(data);
+        } else {
+          setSteamData(prev => ({ ...prev, loading: false, error: true }));
         }
       } catch (error) {
-        console.error('Ошибка при обработке данных Steam:', error);
-        setSteamData(prev => ({ ...prev, loading: false, error: true }));
+        if (isMounted) setSteamData(prev => ({ ...prev, loading: false, error: true }));
       }
     };
 
-    eventSource.onerror = (error) => {
-      console.error('SSE Error:', error);
-      setSteamData(prev => ({ ...prev, loading: false, error: true }));
-      eventSource.close();
-      
-      // Если ошибка SSE, переключаемся на проверку по московскому времени
-      const checkMoscowTime = () => {
-        const now = new Date();
-        const moscowHour = (now.getUTCHours() + 3) % 24; // МСК = UTC+3
-        setIsActiveHours(moscowHour >= 9 && moscowHour < 21);
-      };
-      
-      checkMoscowTime();
-      const interval = setInterval(checkMoscowTime, 60000);
-      return () => clearInterval(interval);
-    };
+    fetchSteam();
+    intervalId = setInterval(fetchSteam, 10000); // раз в 10 секунд
 
     return () => {
-      eventSource.close();
+      isMounted = false;
+      clearInterval(intervalId);
     };
   }, []);
   
