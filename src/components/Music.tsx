@@ -1,7 +1,7 @@
 'use client';
 
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface Track {
   title: string;
@@ -18,19 +18,17 @@ export default function Music() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 5;
 
-  useEffect(() => {
-    console.log('Setting up SSE connection');
+  const setupSSE = useCallback(() => {
     const eventSource = new EventSource('/api/current-track?sse=true');
 
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        console.log('Raw API response:', data);
 
         if (data.success) {
-          console.log('Track data from API:', data.track);
-          
           if (data.track) {
             const trackData = {
               title: data.track.title || '',
@@ -40,44 +38,48 @@ export default function Music() {
               isPlaying: data.track.isPlaying,
               progress: data.track.progress || 0
             };
-            console.log('Processed track data:', trackData);
-            console.log('Is playing:', trackData.isPlaying);
-            console.log('Progress:', trackData.progress);
-            console.log('Duration:', trackData.duration);
-            console.log('Previous track:', track);
-            console.log('Progress changed:', track?.progress !== trackData.progress);
             setTrack(trackData);
             setError(false);
             setImageError(false);
+            setRetryCount(0); // Reset retry count on successful connection
           } else {
-            console.log('No track data');
             setTrack(null);
             setError(false);
           }
         } else {
-          console.error('API Error:', data.error);
           setError(true);
         }
       } catch (err) {
-        console.error('Parse Error:', err);
         setError(true);
       } finally {
         setLoading(false);
       }
     };
 
-    eventSource.onerror = (err) => {
-      console.error('SSE Error:', err);
+    eventSource.onerror = () => {
+      eventSource.close();
       setError(true);
       setLoading(false);
-      eventSource.close();
+
+      // Implement exponential backoff for reconnection
+      if (retryCount < maxRetries) {
+        const backoffTime = Math.min(1000 * Math.pow(2, retryCount), 30000);
+        setTimeout(() => {
+          setRetryCount(prev => prev + 1);
+          setupSSE();
+        }, backoffTime);
+      }
     };
 
+    return eventSource;
+  }, [retryCount]);
+
+  useEffect(() => {
+    const eventSource = setupSSE();
     return () => {
-      console.log('Cleaning up SSE connection');
       eventSource.close();
     };
-  }, []);
+  }, [setupSSE]);
 
   const formatDuration = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
@@ -92,33 +94,36 @@ export default function Music() {
   };
 
   const renderCoverOrIcon = () => {
-    console.log('Rendering cover/icon. Track:', track);
-    console.log('Is playing:', track?.isPlaying);
-    console.log('Has image:', !!track?.img);
-    console.log('Image error:', imageError);
-
     if (track?.img && !imageError) {
       return (
-        <img 
-          src={track.img} 
-          alt={track.title} 
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            console.error('Image load error:', track.img);
-            setImageError(true);
-            e.currentTarget.style.display = 'none';
-          }}
-          onLoad={() => {
-            console.log('Image loaded successfully:', track.img);
-          }}
-        />
+        <div className="relative flex items-center justify-center">
+          {/* Glowing background */}
+          <div
+            className="absolute -inset-8 z-0 rounded-2xl blur-2xl"
+            style={{
+              background: `url(${track.img}) center/cover no-repeat`,
+              opacity: 0.5,
+              filter: 'blur(40px) saturate(2) brightness(1.5)',
+            }}
+          />
+          {/* Cover image */}
+          <img
+            src={track.img}
+            alt={track.title}
+            className="relative z-10 w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover"
+            onError={() => setImageError(true)}
+          />
+        </div>
       );
     }
 
     return (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-neutral-600 dark:text-neutral-300 sm:w-8 sm:h-8">
-        <path d="M15 5V19M21 5V19M3 7.20608V16.7939C3 17.7996 3 18.3024 3.19886 18.5352C3.37141 18.7373 3.63025 18.8445 3.89512 18.8236C4.20038 18.7996 4.55593 18.4441 5.26704 17.733L10.061 12.939C10.3897 12.6103 10.554 12.446 10.6156 12.2565C10.6697 12.0898 10.6697 11.9102 10.6156 11.7435C10.554 11.554 10.3897 11.3897 10.061 11.061L5.26704 6.26704C4.55593 5.55593 4.20038 5.20038 3.89512 5.17636C3.63025 5.15551 3.37141 5.26273 3.19886 5.46476C3 5.69759 3 6.20042 3 7.20608Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
+      <div className="relative flex items-center justify-center">
+        <div className="absolute -inset-8 z-0 rounded-2xl blur-2xl bg-neutral-400/40 dark:bg-neutral-800/40" />
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative z-10 text-neutral-600 dark:text-neutral-300 sm:w-8 sm:h-8">
+          <path d="M15 5V19M21 5V19M3 7.20608V16.7939C3 17.7996 3 18.3024 3.19886 18.5352C3.37141 18.7373 3.63025 18.8445 3.89512 18.8236C4.20038 18.7996 4.55593 18.4441 5.26704 17.733L10.061 12.939C10.3897 12.6103 10.554 12.446 10.6156 12.2565C10.6697 12.0898 10.6697 11.9102 10.6156 11.7435C10.554 11.554 10.3897 11.3897 10.061 11.061L5.26704 6.26704C4.55593 5.55593 4.20038 5.20038 3.89512 5.17636C3.63025 5.15551 3.37141 5.26273 3.19886 5.46476C3 5.69759 3 6.20042 3 7.20608Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
     );
   };
 
@@ -147,15 +152,12 @@ export default function Music() {
     if (loading) return '0:00';
     if (error) return '0:00';
     if (!track) return '0:00';
-    console.log('Rendering progress:', track.progress);
     return formatProgress(track.progress || 0);
   };
 
   const getProgressPercentage = () => {
     if (!track || !track.duration || !track.progress) return 0;
-    const percentage = (track.progress / track.duration) * 100;
-    console.log('Progress percentage:', percentage);
-    return percentage;
+    return (track.progress / track.duration) * 100;
   };
 
   return (
@@ -184,7 +186,7 @@ export default function Music() {
       <div className="flex items-center justify-center w-full">
         <div className="flex flex-col items-center w-full gap-2 sm:gap-4">
           <div className="flex items-center gap-2 sm:gap-4 w-full">
-            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-xl bg-neutral-400/30 dark:bg-neutral-800/50 flex items-center justify-center overflow-hidden">
+            <div className="relative flex items-center justify-center h-16 w-16 sm:h-20 sm:w-20 rounded-xl bg-neutral-400/30 dark:bg-neutral-800/50">
               {renderCoverOrIcon()}
             </div>
             <div className="flex-grow flex flex-col gap-1 sm:gap-2">
@@ -198,20 +200,25 @@ export default function Music() {
               </div>
               <div className="flex items-center justify-center gap-2 w-full">
                 <div className="w-3 h-3 sm:w-4 sm:h-4 text-neutral-800 dark:text-neutral-100">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="sm:w-4 sm:h-4">
-                    <path d="M15 5V19M21 5V19M3 7.20608V16.7939C3 17.7996 3 18.3024 3.19886 18.5352C3.37141 18.7373 3.63025 18.8445 3.89512 18.8236C4.20038 18.7996 4.55593 18.4441 5.26704 17.733L10.061 12.939C10.3897 12.6103 10.554 12.446 10.6156 12.2565C10.6697 12.0898 10.6697 11.9102 10.6156 11.7435C10.554 11.554 10.3897 11.3897 10.061 11.061L5.26704 6.26704C4.55593 5.55593 4.20038 5.20038 3.89512 5.17636C3.63025 5.15551 3.37141 5.26273 3.19886 5.46476C3 5.69759 3 6.20042 3 7.20608Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                  {track?.isPlaying ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  )}
                 </div>
-                <div className="flex-grow h-0.5 max-w-[300px] rounded-full bg-neutral-400/30 dark:bg-neutral-800/50 relative">
-                  <div 
-                    className="absolute top-0 left-0 h-full bg-neutral-600 dark:bg-neutral-300 rounded-full transition-all duration-300"
-                    style={{ width: `${getProgressPercentage()}%` }}
-                  />
-                </div>
-                <div className="flex gap-1 text-xs font-semibold text-neutral-400">
-                  <span>{renderProgress()}</span>
-                  <span>/</span>
-                  <span>{renderDuration()}</span>
+                <div className="flex-grow flex items-center gap-2">
+                  <span className="text-xs text-neutral-400">{renderProgress()}</span>
+                  <div className="flex-grow h-1 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-neutral-800 dark:bg-neutral-200 transition-all duration-300"
+                      style={{ width: `${getProgressPercentage()}%` }}
+                    />
+                  </div>
+                  <span className="text-xs text-neutral-400">{renderDuration()}</span>
                 </div>
               </div>
             </div>

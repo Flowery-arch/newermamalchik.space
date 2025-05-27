@@ -24,7 +24,6 @@ async function fetchTrackData(retryCount = 0, maxRetries = 3) {
       }
     });
 
-    // Check if response is ok before trying to parse JSON
     if (!res.ok) {
       const text = await res.text();
       console.error(`API Error (attempt ${retryCount + 1}/${maxRetries + 1}):`, {
@@ -33,7 +32,6 @@ async function fetchTrackData(retryCount = 0, maxRetries = 3) {
         response: text
       });
 
-      // Retry on 500 errors with exponential backoff
       if (res.status === 500 && retryCount < maxRetries) {
         const backoffTime = Math.min(1000 * Math.pow(2, retryCount), 10000);
         console.log(`Retrying in ${backoffTime}ms...`);
@@ -41,16 +39,15 @@ async function fetchTrackData(retryCount = 0, maxRetries = 3) {
         return fetchTrackData(retryCount + 1, maxRetries);
       }
 
-      throw new Error(`API responded with status ${res.status}: ${text}`);
+      throw new Error(`API responded with status ${res.status}`);
     }
 
-    // Try to parse the response as JSON
     try {
       const data = await res.json();
       return data;
     } catch (err) {
       const text = await res.text();
-      throw new Error(`Failed to parse API response as JSON: ${text}`);
+      throw new Error('Failed to parse API response');
     }
   } catch (err: any) {
     if (retryCount < maxRetries && err.message.includes('500')) {
@@ -93,11 +90,7 @@ export async function GET(req: Request) {
                 progress: parseInt(data.progress_ms || '0')
               };
               
-              const payload = {
-                success: true,
-                track
-              };
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ success: true, track })}\n\n`));
             } else {
               controller.enqueue(encoder.encode(`data: ${JSON.stringify({ success: true, track: null })}\n\n`));
             }
@@ -106,7 +99,7 @@ export async function GET(req: Request) {
             if (!isClosed) {
               controller.enqueue(encoder.encode(`data: ${JSON.stringify({ 
                 success: false, 
-                error: err.message || 'Unknown error occurred'
+                error: 'Failed to fetch track data'
               })}\n\n`));
             }
           }
@@ -125,7 +118,6 @@ export async function GET(req: Request) {
     });
   }
 
-  // Regular GET request
   try {
     const data = await fetchTrackData();
     
@@ -146,7 +138,7 @@ export async function GET(req: Request) {
     console.error('Error fetching track (GET):', err);
     return NextResponse.json({ 
       success: false, 
-      error: err.message || 'Unknown error occurred'
+      error: 'Failed to fetch track data'
     });
   }
 } 
