@@ -25,7 +25,7 @@ const FallingSymbol: React.FC<SymbolProps> = ({ symbol, style }) => (
 );
 
 const FallingSymbols: React.FC = () => {
-  const [fallingElements, setFallingElements] = useState<Array<{ id: number; element: React.ReactElement }>>([]);
+  const [fallingElements, setFallingElements] = useState<Array<{ id: number; element: React.ReactElement<any> }>>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
