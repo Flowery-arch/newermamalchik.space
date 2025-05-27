@@ -9,6 +9,19 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        'sm': '640px',    // Small devices
+        'md': '768px',    // Medium devices
+        'lg': '1024px',   // Large devices
+        'xl': '1280px',   // Extra large devices
+        '2xl': '1536px',  // 2K (1440p)
+        '3xl': '1920px',  // Full HD (1080p)
+        '4xl': '2560px',  // 2.5K (1440p)
+        '5xl': '3440px',  // Ultra-wide 2K
+        '6xl': '3840px',  // 4K (2160p)
+        '7xl': '5120px',  // 5K
+        '8xl': '7680px',  // 8K
+      },
       colors: {
         'dark-bg': '#0a0a0a',
         'card-bg': 'rgba(32, 32, 32, 0.5)',

@@ -55,7 +55,9 @@ export default function Home() {
               className="w-full flex flex-col flex-grow py-4 sm:py-6 md:py-8 lg:py-12 items-start md:items-center pb-16 sm:pb-20"
           >
             <div 
-                className="mx-auto w-full max-w-[1600px] px-3 sm:px-4 md:px-6 lg:px-8 mt-2 sm:mt-4 md:mt-8 lg:mt-12 scale-[0.98] sm:scale-100 md:scale-[1.02] lg:scale-[1.05] xl:scale-[1.08] 2xl:scale-[1.1]"
+                className="mx-auto w-full max-w-[1600px] px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 2xl:px-16 3xl:px-24 4xl:px-32 5xl:px-40 6xl:px-48 7xl:px-56 8xl:px-64 
+                mt-2 sm:mt-4 md:mt-8 lg:mt-12 xl:mt-16 2xl:mt-20 3xl:mt-24 4xl:mt-32 5xl:mt-40 6xl:mt-48 7xl:mt-56 8xl:mt-64 
+                scale-[0.98] sm:scale-100 md:scale-[1.02] lg:scale-[1.05] xl:scale-[1.08] 2xl:scale-[1.1] 3xl:scale-[1.15] 4xl:scale-[1.2] 5xl:scale-[1.25] 6xl:scale-[1.3] 7xl:scale-[1.35] 8xl:scale-[1.4]"
               style={{ transform: `translateY(${parallaxOffset}px)` }}
             >
               <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-3 sm:gap-4 md:gap-6">
