@@ -2,6 +2,31 @@ import { NextResponse } from 'next/server';
 
 const YANDEX_TOKEN = process.env.YANDEX_TOKEN || 'YANDEX_TOKEN';
 
+async function fetchTrackData() {
+  const res = await fetch('http://api.mipoh.ru/get_current_track_beta?update_progress=true&force_update=true&include_progress=true', {
+    headers: {
+      'ya-token': YANDEX_TOKEN,
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache'
+    }
+  });
+
+  // Check if response is ok before trying to parse JSON
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`API responded with status ${res.status}: ${text}`);
+  }
+
+  // Try to parse the response as JSON
+  try {
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    const text = await res.text();
+    throw new Error(`Failed to parse API response as JSON: ${text}`);
+  }
+}
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const isSSE = searchParams.get('sse') === 'true';
@@ -20,14 +45,7 @@ export async function GET(req: Request) {
         while (!isClosed) {
           try {
             console.log('Making API request...');
-            const res = await fetch('http://api.mipoh.ru/get_current_track_beta?update_progress=true&force_update=true&include_progress=true', {
-              headers: {
-                'ya-token': YANDEX_TOKEN,
-                'Cache-Control': 'no-cache',
-                'Pragma': 'no-cache'
-              }
-            });
-            const data = await res.json();
+            const data = await fetchTrackData();
             
             console.log('Raw API response:', JSON.stringify(data, null, 2));
             console.log('Track exists:', !!data.track);
@@ -65,7 +83,10 @@ export async function GET(req: Request) {
             console.error('Error fetching track:', err);
             if (!isClosed) {
               try {
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ success: false, error: err.message })}\n\n`));
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ 
+                  success: false, 
+                  error: err.message || 'Unknown error occurred'
+                })}\n\n`));
               } catch (e) {
                 console.error('Failed to send error message:', e);
               }
@@ -90,14 +111,7 @@ export async function GET(req: Request) {
   // Обычный GET-запрос
   try {
     console.log('Making GET request...');
-    const res = await fetch('http://api.mipoh.ru/get_current_track_beta?update_progress=true&force_update=true&include_progress=true', {
-      headers: {
-        'ya-token': YANDEX_TOKEN,
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
-      }
-    });
-    const data = await res.json();
+    const data = await fetchTrackData();
     
     console.log('Raw API response (GET):', JSON.stringify(data, null, 2));
     console.log('Track exists (GET):', !!data.track);
@@ -123,6 +137,9 @@ export async function GET(req: Request) {
     }
   } catch (err: any) {
     console.error('Error fetching track (GET):', err);
-    return NextResponse.json({ success: false, error: err.message });
+    return NextResponse.json({ 
+      success: false, 
+      error: err.message || 'Unknown error occurred'
+    });
   }
 } 
