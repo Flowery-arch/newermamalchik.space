@@ -65,31 +65,8 @@ export const translations = {
         projects: 'projects'
       },
       descriptions: {
-        biography: 'My digital business card and creative manifesto. A portfolio site that fully reflects my personality, where every detail is handcrafted. No templates — just pure code and unique design.',
-        biographyApi: 'The invisible but crucial backend for my portfolio. Custom API built on Bun+Elysia that flies like a rocket while consuming resources like a hummingbird. All so the frontend can feel like royalty.',
-        flowery: 'A Minecraft server infused with game design and attention to detail. Combines classic mechanics with custom features, wrapping it all in a stylish web interface. Not just a game — an entire ecosystem.',
-        floweryApi: 'A backend beast for Flowery that does it all: from processing microtransactions to synchronizing data between game worlds. Built on Bun+Elysia to be faster than wind and more reliable than rock.',
-        floweryOrder: 'Custom variant of the Flowery server with tailored features for the client. Adapted the base concept to specific requests while maintaining the balance between innovation and player-friendliness.',
-        bloomia: 'Project abandoned at copyright holder\'s request. A story of unfulfilled promises and bitter experience that made me a better developer and taught me to clearly establish agreements upfront.',
-        floweryDiscordBot: 'Not just a Discord bot but a full-fledged bridge between the game server and community. Automates routine tasks, entertains users, and makes server management so simple that even a cat could handle it.'
+        biography: "This is my digital business card. My name is Mikhail, a web developer specializing in TypeScript and Java. Here you will find information about me and my projects."
       },
-      displayNames: {
-        biography: 'Biography',
-        flowery: 'Flowery',
-        floweryorder: 'Flowery (Order)',
-        bloomia: 'Bloomia'
-      }
-    },
-    skills: {
-      title: 'Skills',
-      fullList: 'Full list',
-      viewAll: 'My skills',
-      description: 'See all my programming skills.\nLanguages, frameworks I use or want to learn.',
-      status: {
-        active: 'Active use',
-        learning: 'Learning'
-      },
-      inDevelopment: 'In development'
     },
     wakatime: {
       title: 'wakatime.json',
@@ -255,31 +232,8 @@ export const translations = {
         projects: 'проекты'
       },
       descriptions: {
-        biography: 'Моя цифровая визитка и творческий манифест. Сайт-портфолио, максимально отражающий мою личность, где каждая деталь проработана вручную. Никаких шаблонов — только чистый код и уникальный дизайн.',
-        biographyApi: 'Невидимый, но важный бэкенд для портфолио. Самописное API на Bun+Elysia, которое летает как ракета и потребляет ресурсы как колибри. Всё для того, чтобы фронтенд чувствовал себя королем.',
-        flowery: 'Майнкрафт-сервер, пропитанный геймдизайном и любовью к деталям. Совмещает классические механики с авторскими фишками, заворачивая всё это в стильный веб-интерфейс. Не просто игра — целая экосистема.',
-        floweryApi: 'Бэкенд-монстр для Flowery, который умеет всё: от обработки микротранзакций до синхронизации данных между игровыми мирами. Построен на Bun+Elysia, чтобы быть быстрее ветра и надёжнее скалы.',
-        floweryOrder: 'Заказной вариант сервера Flowery с кастомными фишками для клиента. Адаптировал базовую концепцию под специфические запросы, сохранив баланс между инновациями и удобством для игроков.',
-        bloomia: 'Проект заброшен по просьбе правообладателя. История с несбывшимися обещаниями и горьким опытом, который сделал меня лучшим разработчиком и научил чётко фиксировать договорённости на берегу.',
-        floweryDiscordBot: 'Не просто Discord-бот, а полноценный мост между игровым сервером и сообществом. Автоматизирует рутину, развлекает пользователей и делает управление сервером настолько простым, что справился бы даже кот.'
+        biography: "Это моя цифровая визитка. Меня зовут Михаил, я веб-разработчик, специализирующийся на TypeScript и Java. Здесь вы найдете информацию обо мне и моих проектах."
       },
-      displayNames: {
-        biography: 'Биография',
-        flowery: 'Flowery',
-        floweryorder: 'Flowery (Заказ)',
-        bloomia: 'Bloomia'
-      }
-    },
-    skills: {
-      title: 'Умения',
-      fullList: 'Полный список',
-      viewAll: 'Мои умения',
-      description: 'Посмотрите все мои навыки программирования.\nЯзыки, фреймворки которые я использую или хочу изучить.',
-      status: {
-        active: 'Активно использую',
-        learning: 'Изучаю'
-      },
-      inDevelopment: 'В разработке'
     },
     wakatime: {
       title: 'wakatime.json',
@@ -289,7 +243,7 @@ export const translations = {
     },
     music: {
       title: 'music.js',
-      nothing_here: 'Хмм... Похоже, здесь ничего нет',
+      nothing_here: "Хмм... Похоже, здесь ничего нет",
       not_found: 'Не найдено',
       placeholder_artist: 'Тут мог быть классный исполнитель'
     },
@@ -311,7 +265,7 @@ export const translations = {
       66: 'Небольшой ледяной дождь',
       67: 'Сильный ледяной дождь',
       71: 'Небольшой снег',
-      73: 'Снег',
+      73: 'Средний снег',
       75: 'Сильный снег',
       77: 'Снежная крупа',
       80: 'Небольшой ливень',
@@ -445,31 +399,8 @@ export const translations = {
         projects: 'プロジェクト'
       },
       descriptions: {
-        biography: 'デジタル名刺と創造的なマニフェスト。私の個性を完全に反映したポートフォリオサイトで、すべての細部が手作業で作られています。テンプレートはなく、純粋なコードとユニークなデザインだけです。',
-        biographyApi: '私のポートフォリオの目に見えないが重要なバックエンド。Bun+Elysiaで構築されたカスタムAPIは、リソースをハミングバードのように消費しながらロケットのように飛びます。すべてはフロントエンドが王様のように感じるためです。',
-        flowery: 'ゲームデザインと細部への注意が注入されたMinecraftサーバー。古典的なメカニクスとカスタム機能を組み合わせ、すべてをスタイリッシュなウェブインターフェースでラップしています。単なるゲームではなく、完全なエコシステムです。',
-        floweryApi: 'マイクロトランザクションの処理からゲームワールド間のデータ同期まで、すべてを行うFloweryのバックエンドビースト。風よりも速く、岩よりも信頼性が高くなるようにBun+Elysiaで構築されています。',
-        floweryOrder: 'クライアント向けにカスタマイズされた機能を持つFloweryサーバーのカスタムバリアント。革新とプレイヤーフレンドリーさのバランスを維持しながら、基本コンセプトを特定の要求に適応させました。',
-        bloomia: '著作権者の要請により放棄されたプロジェクト。約束が果たされなかった苦い経験の物語は、私をより良い開発者にし、事前に明確な合意を確立することを教えてくれました。',
-        floweryDiscordBot: '単なるDiscordボットではなく、ゲームサーバーとコミュニティの間の完全な橋です。ルーチンタスクを自動化し、ユーザーを楽しませ、サーバー管理を猫でも扱えるほど簡単にします。'
+        biography: "これは私のデジタル名刺です。 私はTypeScriptとJavaを専門とするweb開発者です。 ここでは、私と私のプロジェクトに関する情報を見つけることができます。"
       },
-      displayNames: {
-        biography: 'バイオグラフィー',
-        flowery: 'Flowery',
-        floweryorder: 'Flowery (注文)',
-        bloomia: 'Bloomia'
-      }
-    },
-    skills: {
-      title: 'スキル',
-      fullList: '全リスト',
-      viewAll: '私のスキル',
-      description: '私のすべてのプログラミングスキルを見る。\n使用または学びたい言語、フレームワーク。',
-      status: {
-        active: '使用中',
-        learning: '学習中'
-      },
-      inDevelopment: '開発中'
     },
     wakatime: {
       title: 'wakatime.json',
@@ -569,4 +500,4 @@ export const translations = {
       }
     }
   }
-}; 
+};
