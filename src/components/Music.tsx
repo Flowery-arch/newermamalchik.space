@@ -20,7 +20,7 @@ export default function Music() {
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    let intervalId;
+    let intervalId: NodeJS.Timeout;
     let isMounted = true;
     const fetchTrack = async () => {
       try {
@@ -46,15 +46,22 @@ export default function Music() {
           }
         } else {
           setError(true);
+          console.error('Failed to fetch track:', data.error || 'Unknown error');
         }
       } catch (err) {
-        if (isMounted) setError(true);
+        if (isMounted) {
+          setError(true);
+          console.error('Error fetching track:', err);
+          // Увеличиваем интервал при ошибке
+          clearInterval(intervalId);
+          intervalId = setInterval(fetchTrack, 5000); // Увеличиваем до 5 секунд при ошибке
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
     };
     fetchTrack();
-    intervalId = setInterval(fetchTrack, 5000); // раз в 5 секунд
+    intervalId = setInterval(fetchTrack, 2000); // раз в 2 секунды
     return () => {
       isMounted = false;
       clearInterval(intervalId);
@@ -74,7 +81,7 @@ export default function Music() {
   };
 
   const renderCoverOrIcon = () => {
-    if (track?.img && !imageError) {
+    if (track?.img && !imageError && track.isPlaying) {
       return (
         <div className="relative flex items-center justify-center">
           {/* Glowing background */}
@@ -110,33 +117,33 @@ export default function Music() {
   const renderTitle = () => {
     if (loading) return t('loading');
     if (error) return t('music.nothing_here');
-    if (!track) return t('music.nothing_here');
+    if (!track || !track.isPlaying) return t('music.nothing_here');
     return track.title || t('music.nothing_here');
   };
 
   const renderArtist = () => {
     if (loading) return '';
     if (error) return t('music.placeholder_artist');
-    if (!track) return t('music.placeholder_artist');
+    if (!track || !track.isPlaying) return t('music.placeholder_artist');
     return track.artist || t('music.placeholder_artist');
   };
 
   const renderDuration = () => {
     if (loading) return '0:00';
     if (error) return '0:00';
-    if (!track) return '0:00';
+    if (!track || !track.isPlaying) return '0:00';
     return track.duration ? formatDuration(track.duration) : '0:00';
   };
 
   const renderProgress = () => {
     if (loading) return '0:00';
     if (error) return '0:00';
-    if (!track) return '0:00';
+    if (!track || !track.isPlaying) return '0:00';
     return formatProgress(track.progress || 0);
   };
 
   const getProgressPercentage = () => {
-    if (!track || !track.duration || !track.progress) return 0;
+    if (!track || !track.duration || !track.progress || !track.isPlaying) return 0;
     return (track.progress / track.duration) * 100;
   };
 
