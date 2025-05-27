@@ -1,3 +1,3 @@
 ## Портфолио ( обновляется часто ) 
 
-![{BB96B402-BD4C-4316-9D74-B8B66CE7CEB0}](https://github.com/user-attachments/assets/d6390cef-4b6e-49c6-be32-a5c60e6c3ad8)
+![{6C3E8089-E039-4C39-B83A-372CB99B81A9}](https://github.com/user-attachments/assets/04f455db-b8e9-421d-8864-4ee65e347aff)
