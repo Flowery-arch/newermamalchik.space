@@ -15,6 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {metadata.other &&
+          Object.entries(metadata.other).map(([name, content]) => (
+            <meta key={name} name={name} content={String(content)} />
+          ))}
+      </head>
       <body className={montserrat.className}>
         <ThemeProviderWrapper>
           <LanguageProvider>

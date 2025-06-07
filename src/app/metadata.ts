@@ -107,5 +107,6 @@ export const metadata: Metadata = {
   // Локализованные теги для разных языков для поисковиков
   other: {
     'google-site-verification': 'verification_token', // Замените на свой
+    'mailru-domain': 'ZEoAdyuq15QJVaAn',
   },
 }; 
