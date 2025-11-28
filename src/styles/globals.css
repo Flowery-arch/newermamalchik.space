@@ -1,0 +1,279 @@
+/* Import System24 theme */
+@import '../styles/system24.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 10, 10, 10;
+  --font-neue-bold: 'Bebas Neue', sans-serif;
+
+  /* Modern color palette */
+  --primary-50: #f0f9ff;
+  --primary-100: #e0f2fe;
+  --primary-500: #0ea5e9;
+  --primary-600: #0284c7;
+  --primary-700: #0369a1;
+  --primary-900: #0c4a6e;
+
+  /* Glass effects */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+
+  /* Animations */
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme='dark'] {
+  --glass-bg: rgba(0, 0, 0, 0.2);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+body {
+  @apply min-h-screen text-neutral-800 dark:text-neutral-300;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+  font-family: var(--font-neue-bold);
+  scroll-behavior: smooth;
+}
+
+.glass-card {
+  @apply relative rounded-2xl border border-white/10 p-6 backdrop-blur-xl transition-all duration-500;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(20px);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.5);
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  pointer-events: none;
+}
+
+.file-header {
+  @apply flex items-center gap-2 mb-2;
+}
+
+.file-header-text {
+  @apply text-sm text-neutral-800 dark:text-neutral-100/70;
+}
+
+.status-indicator {
+  @apply pointer-events-none;
+}
+
+.status-active {
+  @apply bg-emerald-500;
+  box-shadow: 0 0 10px #4ade80;
+}
+
+.status-learning {
+  @apply bg-orange-500;
+  box-shadow: 0 0 10px #f97316;
+}
+
+.status-not-supported {
+  @apply bg-red-500;
+  box-shadow: 0 0 10px #ef4444;
+}
+
+.version-tag {
+  @apply text-sm text-neutral-500;
+}
+
+@layer components {
+  .easy-in-out {
+    @apply duration-500 ease-in-out;
+  }
+
+  .card-base {
+    @apply rounded-xl shadow-lg ring-2 ring-neutral-500/20 dark:bg-neutral-900/10 dark:ring-neutral-300/10;
+  }
+
+  .card-hover {
+    @apply hover:scale-101 duration-500 ease-in-out;
+  }
+
+  .heading {
+    @apply text-xl font-semibold text-neutral-800 sm:text-2xl dark:text-neutral-200;
+  }
+
+  .project-item {
+    @apply rounded-xl shadow-lg ring-2 ring-neutral-500/20 duration-500 hover:scale-101
+           active:scale-98 active:opacity-80 dark:bg-neutral-950 dark:ring-neutral-300/10
+           grid gap-2 p-5;
+  }
+
+  .status-text {
+    @apply text-sm;
+  }
+
+  .glow-effect {
+    @apply absolute inset-0 flex items-center justify-center;
+  }
+
+  .glow-circle {
+    @apply size-20 rounded-full opacity-25 blur-[50px];
+  }
+
+  .button-base {
+    @apply cursor-pointer rounded-xl bg-neutral-100/20 ring-2 ring-neutral-400/30
+           duration-500 ease-in-out hover:scale-98 hover:opacity-80
+           active:scale-95 active:opacity-90 dark:bg-neutral-900/20 dark:ring-neutral-600/30;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600;
+  }
+
+  .text-primary {
+    @apply text-neutral-900 dark:text-neutral-200/90;
+  }
+
+  .icon-primary {
+    @apply text-neutral-900 dark:text-neutral-200/80;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500;
+  }
+
+  .text-gradient-rainbow {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 via-indigo-500 to-purple-500;
+    background-size: 400% 400%;
+    animation: rainbow 6s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+  }
+
+  .animate-glow {
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+
+  .backdrop-blur-custom {
+    backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+
+  .shadow-glow-purple {
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+  }
+
+  .shadow-glow-pink {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes pulse-slow {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes glow {
+    0% {
+      box-shadow: 0 0 5px rgba(59, 130, 246, 0.2);
+    }
+    100% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+    }
+  }
+
+  @keyframes rainbow {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Modern scrollbar */
+  .scrollbar-modern::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .scrollbar-modern::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
+  .scrollbar-modern::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+  }
+
+  .scrollbar-modern::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  }
+
+  /* Selection styles */
+  ::selection {
+    background: rgba(59, 130, 246, 0.3);
+    color: white;
+  }
+
+  ::-moz-selection {
+    background: rgba(59, 130, 246, 0.3);
+    color: white;
+  }
+}

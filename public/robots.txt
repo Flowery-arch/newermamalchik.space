@@ -1,0 +1,38 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://neweramamalchik.space/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+
+# Block access to sensitive directories
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /.well-known/
+Disallow: /node_modules/
+
+# Allow access to important files
+Allow: /favicon.ico
+Allow: /og-image.png
+Allow: /apple-touch-icon.png
+Allow: /site.webmanifest
+
+# Host directive
+Host: https://neweramamalchik.space
