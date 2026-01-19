@@ -1,66 +1,38 @@
-# Portfolio Website
+# sv
 
-Современное портфолио разработчика, созданное с использованием Next.js, React, TypeScript и Tailwind CSS.
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-## Особенности
+## Creating a project
 
-- 🎨 Современный и минималистичный дизайн
-- 📱 Полностью адаптивный интерфейс
-- ⚡ Быстрая загрузка благодаря Next.js
-- 🎭 Плавные анимации и переходы
-- 🌙 Темная тема
+If you're seeing this, you've probably already done this step. Congrats!
 
-## Технологии
+```sh
+# create a new project in the current directory
+npx sv create
 
-- **Next.js 14** - React фреймворк
-- **TypeScript** - Типизированный JavaScript
-- **Tailwind CSS** - Utility-first CSS фреймворк
-- **React 18** - Библиотека для создания UI
+# create a new project in my-app
+npx sv create my-app
+```
 
-## Установка
+## Developing
 
-```bash
-# Установка зависимостей
-npm install
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-# Запуск dev сервера
+```sh
 npm run dev
 
-# Сборка для production
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```sh
 npm run build
-
-# Запуск production сервера
-npm start
 ```
 
-Откройте [http://localhost:3000](http://localhost:3000) в браузере.
+You can preview the production build with `npm run preview`.
 
-## Структура проекта
-
-```
-portfolio/
-├── app/
-│   ├── layout.tsx      # Основной layout
-│   ├── page.tsx        # Главная страница
-│   └── globals.css     # Глобальные стили
-├── components/
-│   ├── Header.tsx      # Шапка сайта
-│   ├── Hero.tsx        # Главная секция
-│   ├── Projects.tsx    # Секция проектов
-│   ├── Skills.tsx      # Секция навыков
-│   ├── About.tsx       # Секция "Обо мне"
-│   └── Footer.tsx      # Подвал сайта
-└── package.json
-```
-
-## Настройка
-
-Вы можете настроить контент в каждом компоненте:
-- Добавить свои проекты в `components/Projects.tsx`
-- Обновить навыки в `components/Skills.tsx`
-- Изменить информацию о себе в `components/About.tsx`
-
-## Лицензия
-
-MIT
-
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
