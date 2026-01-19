@@ -1,38 +1,84 @@
-# sv
+# newermamalchik.space
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+![Portfolio Preview](static/image.png)
 
-## Creating a project
+**Современное портфолио разработчика newermamalchik (newer__)**
 
-If you're seeing this, you've probably already done this step. Congrats!
+Личный сайт-портфолио с современным минималистичным дизайном, демонстрирующий навыки в веб-разработке, создании Discord ботов и разработке платформ для Minecraft проектов.
 
-```sh
-# create a new project in the current directory
-npx sv create
+## 🌟 Особенности
 
-# create a new project in my-app
-npx sv create my-app
+- 🎨 **Современный дизайн** - Темная тема с glass morphism эффектами
+- 📱 **Адаптивность** - Полностью оптимизировано для всех устройств
+- ⚡ **Высокая производительность** - SvelteKit + Vite для молниеносной загрузки
+- 🌤️ **Интеграции** - Погода в реальном времени, системная информация
+- 🎭 **Плавные анимации** - Smooth transitions и micro-interactions
+- 🔗 **Контакты** - Прямые ссылки на Telegram, Discord, GitHub
+
+## 🚀 Технологии
+
+- **SvelteKit** - Современный фреймворк для быстрой разработки
+- **TypeScript** - Типизированный JavaScript для надежного кода
+- **Tailwind CSS** - Utility-first CSS фреймворк
+- **Bun** - Быстрый пакетный менеджер и runtime
+- **Vite** - Молниеносный build tool
+
+## 💼 Обо мне
+
+Привет! Я newer__ - разработчик специализирующийся на:
+
+- **Веб-платформы** для Minecraft серверов
+- **Discord боты** для автоматизации процессов
+- **API сервисы** и backend решения
+- **Современные UI/UX** с React, Svelte, Next.js
+
+Использую стек: TypeScript, React/Svelte, Node.js, Python, PostgreSQL, MongoDB
+
+## 🛠 Установка и запуск
+
+```bash
+# Установка зависимостей
+bun install
+
+# Запуск dev сервера
+bun run dev
+
+# Сборка для production
+bun run build
+
+# Превью production сборки
+bun run preview
 ```
 
-## Developing
+## 📂 Структура проекта
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```
+newermamalchik.space/
+├── src/
+│   ├── lib/
+│   │   ├── components/     # Компоненты Svelte
+│   │   └── stores/         # Состояние приложения
+│   ├── routes/             # Страницы и layout
+│   └── app.css             # Глобальные стили
+├── static/                 # Статические файлы
+│   ├── favicon.svg
+│   ├── image.png          # Превью изображение
+│   └── robots.txt
+└── package.json
 ```
 
-## Building
+## 🌐 Развертывание
 
-To create a production version of your app:
+Проект автоматически развертывается на Vercel при пуше в main ветку.
 
-```sh
-npm run build
-```
+**Live demo:** [newermamalchik.space](https://newermamalchik.space)
 
-You can preview the production build with `npm run preview`.
+## 📞 Контакты
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- **Telegram:** [@mkphotoss](https://t.me/mkphotoss)
+- **Discord:** Flowery#1337
+- **GitHub:** [@Flowery-arch](https://github.com/Flowery-arch)
+
+---
+
+*Создано с ❤️ на SvelteKit*

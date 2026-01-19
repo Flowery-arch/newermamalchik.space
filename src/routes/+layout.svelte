@@ -7,12 +7,12 @@
 </script>
 
 <svelte:head>
-	<title>newer__ | Full-stack разработчик</title>
-	<meta name="description" content="Full-stack разработчик из России. Создаю сайты для Minecraft серверов, Discord ботов, плагины и API сервисы." />
-	<meta name="keywords" content="minecraft, discord, бот, плагин, api, сайт сервера, разработчик, svelte, typescript, next.js" />
-	<meta name="author" content="newer__" />
-	<meta property="og:title" content="newer__ | Full-stack разработчик" />
-	<meta property="og:description" content="Создаю сайты для Minecraft серверов, Discord ботов, плагины и API." />
+	<title>newer__ - Разработчик Minecraft платформ и Discord ботов</title>
+	<meta name="description" content="newer__ - разработчик из России. Специализируюсь на создании веб-платформ для Minecraft проектов, Discord ботов и API сервисов. TypeScript, Svelte, React, Node.js." />
+	<meta name="keywords" content="newer__, minecraft, discord, бот, плагин, api, сайт сервера, разработчик, svelte, typescript, next.js, портфолио" />
+	<meta name="author" content="newer__ (Flowery-arch)" />
+	<meta property="og:title" content="newer__ - Разработчик Minecraft платформ и Discord ботов" />
+	<meta property="og:description" content="Личное портфолио разработчика newer__. Создаю современные веб-платформы, Discord боты и API для Minecraft проектов." />
 	<meta property="og:type" content="website" />
 	<meta name="theme-color" content="#60a5fa" />
 	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
