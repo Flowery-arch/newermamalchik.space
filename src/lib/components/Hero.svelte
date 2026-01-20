@@ -56,16 +56,14 @@
 					<div class="flex gap-2 md:gap-3 pt-1 md:pt-2">
 						<a
 							href="#projects"
-							class="group relative px-4 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[12px] md:text-[13px] font-medium overflow-hidden smooth"
+							class="px-4 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[12px] md:text-[13px] text-[#a1a1aa] hover:text-[#fafafa] border border-[#27272a] hover:border-[#3f3f46] hover:bg-[#18181b] smooth"
 						>
-							<span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600"></span>
-							<span class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 smooth"></span>
-							<span class="relative text-white">Смотреть проекты</span>
+							Смотреть проекты
 						</a>
 						<a
 							href="https://github.com/Flowery-arch"
 							target="_blank"
-							class="px-4 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[12px] md:text-[13px] text-[#a1a1aa] hover:text-[#fafafa] border border-white/10 hover:border-white/20 hover:bg-white/5 smooth"
+							class="px-4 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl text-[12px] md:text-[13px] text-[#a1a1aa] hover:text-[#fafafa] border border-[#27272a] hover:border-[#3f3f46] hover:bg-[#18181b] smooth"
 						>
 							GitHub
 						</a>
