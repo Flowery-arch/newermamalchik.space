@@ -21,6 +21,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </svelte:head>
 
+<div class="noise"></div>
 <div class="min-h-screen flex flex-col">
 	<Header />
 	<main class="flex-1 flex flex-col">

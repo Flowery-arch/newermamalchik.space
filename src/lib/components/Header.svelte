@@ -1,85 +1,46 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	import { onMount } from 'svelte';
 
 	let scrolled = $state(false);
-	let time = $state('');
-	let date = $state('');
-
-	const navLinks = [
-		{ href: '#about', label: 'Обо мне' },
-		{ href: '#projects', label: 'Проекты' },
-		{ href: '#skills', label: 'Навыки' }
-	];
-
-	function updateTime() {
-		const now = new Date();
-		time = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-		date = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
-	}
 
 	onMount(() => {
-		updateTime();
-		const interval = setInterval(updateTime, 1000);
-
 		const handleScroll = () => {
-			scrolled = window.scrollY > 50;
+			scrolled = window.scrollY > 20;
 		};
-
 		window.addEventListener('scroll', handleScroll);
-
-		return () => {
-			clearInterval(interval);
-			window.removeEventListener('scroll', handleScroll);
-		};
+		return () => window.removeEventListener('scroll', handleScroll);
 	});
 </script>
 
 <header
-	class="fixed top-0 left-0 right-0 z-100 smooth {scrolled ? 'header-scrolled' : ''}"
+	class="fixed top-0 left-0 right-0 z-[100] px-4 md:px-6 py-3 md:py-4 smooth {scrolled ? 'bg-[#09090b]/80 backdrop-blur-xl border-b border-[#27272a]' : ''}"
 >
-	<div class="flex items-center justify-between px-8 lg:px-24 py-4">
-		<!-- Logo + Navigation -->
-		<div class="flex items-center gap-8">
-			<a href="/" class="flex items-center gap-3 group">
-				<img src="/favicon.svg" alt="Logo" class="w-8 h-8 rounded-lg" />
-				<span class="font-[family-name:var(--font-raleway)] font-semibold text-white text-[14px] group-hover:text-blue-300 smooth">
-					newer<span class="text-white/40">__</span>
-				</span>
+	<div class="max-w-6xl mx-auto flex items-center justify-between">
+		<a href="/" class="flex items-center gap-2 group">
+			<img src="/favicon.svg" alt="Logo" class="w-7 h-7 md:w-8 md:h-8 rounded-lg" />
+			<span class="text-[#fafafa] text-sm font-medium hidden sm:block">newer__</span>
+		</a>
+
+		<nav class="hidden md:flex items-center gap-1">
+			<a href="#projects" class="px-3 py-1.5 text-[13px] text-[#a1a1aa] hover:text-[#fafafa] hover:bg-[#27272a] rounded-lg smooth">
+				Проекты
 			</a>
-
-			<!-- Desktop Navigation (next to logo) -->
-			<nav class="hidden lg:flex items-center gap-5">
-				{#each navLinks as link}
-					<a
-						href={link.href}
-						class="font-[family-name:var(--font-zed)] text-white/60 hover:text-white text-[12px] smooth"
-					>
-						{link.label}
-					</a>
-				{/each}
-			</nav>
-		</div>
-
-		<!-- Right side -->
-		<div class="flex items-center gap-3">
-			<!-- Time display -->
-			<div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full border border-dotted border-white/10">
-				<Icon icon="mingcute:time-line" class="text-white/40" width="12" />
-				<span class="font-[family-name:var(--font-zed)] text-white/60 text-[11px]">{time}</span>
-				<span class="text-white/20">•</span>
-				<span class="font-[family-name:var(--font-zed)] text-white/40 text-[11px]">{date}</span>
-			</div>
-
-			<!-- Contact button -->
-			<a
-				href="https://t.me/mkphotoss"
-				target="_blank"
-				class="flex gap-2 items-center px-4 py-1.5 border border-dotted border-sky-300/30 hover:border-sky-300 rounded-full hover:bg-sky-500/10 f-smooth"
-			>
-				<Icon icon="mingcute:telegram-line" class="text-sky-300" width="14" />
-				<span class="font-[family-name:var(--font-zed)] text-sky-300 text-[11px] hidden sm:inline">Связаться</span>
+			<a href="#skills" class="px-3 py-1.5 text-[13px] text-[#a1a1aa] hover:text-[#fafafa] hover:bg-[#27272a] rounded-lg smooth">
+				Стек
 			</a>
-		</div>
+			<a href="#about" class="px-3 py-1.5 text-[13px] text-[#a1a1aa] hover:text-[#fafafa] hover:bg-[#27272a] rounded-lg smooth">
+				Обо мне
+			</a>
+		</nav>
+
+		<a
+			href="https://t.me/mkphotoss"
+			target="_blank"
+			class="group relative px-3 md:px-4 py-1.5 rounded-lg text-[12px] md:text-[13px] font-medium overflow-hidden smooth"
+		>
+			<span class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600"></span>
+			<span class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 opacity-0 group-hover:opacity-100 smooth"></span>
+			<span class="relative text-white">Связаться</span>
+		</a>
 	</div>
 </header>

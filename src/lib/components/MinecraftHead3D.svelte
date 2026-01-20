@@ -36,8 +36,10 @@
 		skinViewer.playerObject.skin.leftLeg.visible = false;
 		skinViewer.playerObject.skin.rightLeg.visible = false;
 
-		skinViewer.camera.position.set(0, 10, 18);
+		// Приблизить камеру и центрировать голову
+		skinViewer.camera.position.set(0, 10, 14);
 		skinViewer.camera.lookAt(0, 10, 0);
+		skinViewer.fov = 50;
 	});
 
 	onDestroy(() => {
