@@ -60,6 +60,11 @@
 	// Minimized modals tracker
 	let minimizedModals = $state<{id: string, title: string, icon: string}[]>([]);
 
+	// Tiled modals for Hyprland-style view
+	let tiledModals = $state<string[]>([]);
+	let showTiledView = $state(false);
+	let activeTiledModal = $state<string | null>(null);
+
 	// Code snippet for About modal
 	const codeSnippet = `<script>
   import About from './About.svelte';
@@ -230,14 +235,113 @@
 		else if (id === 'about') restoreAboutModal();
 	}
 
+	// Open all minimized modals in tiled view
+	function openTiledView() {
+		if (minimizedModals.length > 1) {
+			tiledModals = minimizedModals.map(m => m.id);
+			showTiledView = true;
+			activeTiledModal = tiledModals[0];
+			document.body.style.overflow = 'hidden';
+		} else if (minimizedModals.length === 1) {
+			restoreModal(minimizedModals[0].id);
+		}
+	}
+
+	function closeTiledView() {
+		// Close all minimized modals completely
+		tiledModals = [];
+		showTiledView = false;
+		activeTiledModal = null;
+		minimizedModals = [];
+
+		// Reset all minimized states
+		systemModalMinimized = false;
+		spotifyModalMinimized = false;
+		weatherModalMinimized = false;
+		aboutModalMinimized = false;
+
+		document.body.style.overflow = '';
+	}
+
+	function selectTiledModal(id: string) {
+		activeTiledModal = id;
+	}
+
+	function expandFromTiled(id: string) {
+		// Close tiled view completely and open clicked modal
+		tiledModals = [];
+		showTiledView = false;
+		activeTiledModal = null;
+		minimizedModals = [];
+
+		// Reset all minimized states
+		systemModalMinimized = false;
+		spotifyModalMinimized = false;
+		weatherModalMinimized = false;
+		aboutModalMinimized = false;
+
+		// Open the clicked modal
+		restoreModal(id);
+	}
+
+	function closeFromTiled(id: string) {
+		tiledModals = tiledModals.filter(m => m !== id);
+		minimizedModals = minimizedModals.filter(m => m.id !== id);
+
+		// Reset the minimized state
+		if (id === 'system') systemModalMinimized = false;
+		else if (id === 'spotify') spotifyModalMinimized = false;
+		else if (id === 'weather') weatherModalMinimized = false;
+		else if (id === 'about') aboutModalMinimized = false;
+
+		if (tiledModals.length <= 1) {
+			if (tiledModals.length === 1) {
+				const lastId = tiledModals[0];
+				tiledModals = [];
+				showTiledView = false;
+				activeTiledModal = null;
+				restoreModal(lastId);
+			} else {
+				showTiledView = false;
+				activeTiledModal = null;
+				document.body.style.overflow = '';
+			}
+		} else {
+			activeTiledModal = tiledModals[0];
+		}
+	}
+
+	function getModalContent(id: string) {
+		return { id, title: getModalTitle(id), icon: getModalIcon(id) };
+	}
+
+	function getModalTitle(id: string): string {
+		if (id === 'system') return 'Система';
+		if (id === 'spotify') return 'Spotify';
+		if (id === 'weather') return 'Погода';
+		if (id === 'about') return 'Обо мне';
+		return '';
+	}
+
+	function getModalIcon(id: string): string {
+		if (id === 'system') return 'mingcute:laptop-line';
+		if (id === 'spotify') return 'mingcute:music-2-line';
+		if (id === 'weather') return 'mingcute:sun-line';
+		if (id === 'about') return 'mingcute:user-4-line';
+		return '';
+	}
+
 	// Spotify - текущий трек с прогрессом
 	let currentTrack = $state<{
 		name: string;
 		artist: string;
+		album?: string;
 		cover?: string;
 		isPlaying: boolean;
 		progress: number;
 		duration: number;
+		deviceName?: string;
+		volumePercent?: number;
 	} | null>(null);
 
 	// GitHub contributions
@@ -327,10 +431,13 @@
 				currentTrack = {
 					name: data.title,
 					artist: data.artist,
+					album: data.album,
 					cover: data.albumImageUrl,
 					isPlaying: true,
 					progress: data.progress || 0,
-					duration: data.duration || 0
+					duration: data.duration || 0,
+					deviceName: data.deviceName,
+					volumePercent: data.volumePercent
 				};
 			} else {
 				currentTrack = null;
@@ -568,6 +675,25 @@
 								{currentTrack ? formatTime(currentTrack.duration) : '0:00'}
 							</span>
 						</div>
+
+						<!-- Volume and Device info -->
+						{#if currentTrack}
+							<div class="flex items-center gap-3 md:gap-4 mt-1">
+								{#if currentTrack.volumePercent !== undefined && currentTrack.volumePercent !== null}
+									<div class="flex items-center gap-1.5">
+										<Icon icon="mingcute:volume-line" class="text-[#52525b]" width="14" />
+										<span class="text-[#a1a1aa] text-[10px] md:text-[12px]">{currentTrack.volumePercent}%</span>
+									</div>
+								{/if}
+								{#if currentTrack.deviceName}
+									<span class="text-[#3f3f46] text-[10px] hidden md:block">•</span>
+									<div class="hidden md:flex items-center gap-1.5">
+										<Icon icon="mingcute:laptop-2-line" class="text-[#52525b]" width="14" />
+										<span class="text-[#a1a1aa] text-[10px] md:text-[12px]">{currentTrack.deviceName}</span>
+									</div>
+								{/if}
+							</div>
+						{/if}
 					</div>
 				</div>
 			</button>
@@ -691,18 +817,30 @@
 </section>
 
 <!-- Minimized modals dock -->
-{#if minimizedModals.length > 0}
-	<div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[250] flex gap-2">
-		{#each minimizedModals as modal}
+{#if minimizedModals.length > 0 && !showTiledView}
+	<div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-[250] flex gap-2 items-center">
+		{#if minimizedModals.length > 1}
+			<!-- Only show tile all button when 2+ modals -->
 			<button
-				onclick={() => restoreModal(modal.id)}
-				class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] text-[#a1a1aa] hover:text-[#fafafa] smooth animate-slide-up"
+				onclick={openTiledView}
+				class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#18181b] border border-[#3f3f46] hover:border-[#52525b] text-[#a1a1aa] hover:text-[#fafafa] smooth animate-slide-up"
 			>
-				<Icon icon={modal.icon} width="16" />
-				<span class="text-[12px]">{modal.title}</span>
-				<Icon icon="mingcute:arrow-up-line" width="14" class="text-[#52525b]" />
+				<Icon icon="mingcute:layout-grid-line" width="16" />
+				<span class="text-[12px]">Развернуть все ({minimizedModals.length})</span>
 			</button>
-		{/each}
+		{:else}
+			<!-- Show individual button only when 1 modal -->
+			{#each minimizedModals as modal}
+				<button
+					onclick={() => restoreModal(modal.id)}
+					class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#18181b] border border-[#27272a] hover:border-[#3f3f46] text-[#a1a1aa] hover:text-[#fafafa] smooth animate-slide-up"
+				>
+					<Icon icon={modal.icon} width="16" />
+					<span class="text-[12px]">{modal.title}</span>
+					<Icon icon="mingcute:arrow-up-line" width="14" class="text-[#52525b]" />
+				</button>
+			{/each}
+		{/if}
 	</div>
 {/if}
 
@@ -718,11 +856,11 @@
 	>
 		<div class="absolute inset-0 bg-black/80 backdrop-blur-sm animate-fade-in"></div>
 
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div
-			class="relative bg-[#0d0d0f] border border-[#27272a] overflow-hidden animate-scale-in smooth {systemModalFullscreen ? 'w-full h-full rounded-none' : 'w-full max-w-2xl rounded-2xl'}"
+			class="relative bg-[#0d0d0f] border border-[#27272a] overflow-hidden animate-scale-in smooth {systemModalFullscreen ? 'w-full h-full rounded-none' : 'w-full max-w-2xl max-h-[90vh] rounded-xl md:rounded-2xl'}"
 			onclick={(e) => e.stopPropagation()}
-			onkeydown={(e) => e.key === 'Enter' && e.stopPropagation()}
-			role="document"
 		>
 			<div class="flex items-center justify-between px-4 py-3 bg-[#18181b] border-b border-[#27272a]">
 				<div class="flex items-center gap-2">
@@ -742,9 +880,9 @@
 				</div>
 			</div>
 
-			<div class="p-6 font-mono text-[13px] leading-relaxed {systemModalFullscreen ? 'h-[calc(100%-52px)] overflow-auto' : ''}">
-				<div class="flex gap-6 md:gap-10">
-					<div class="hidden sm:block text-[#1793d1] whitespace-pre text-[11px] leading-[1.1]">{`
+			<div class="p-4 md:p-6 font-mono text-[11px] md:text-[13px] leading-relaxed {systemModalFullscreen ? 'h-[calc(100%-52px)] overflow-auto' : ''}">
+				<div class="flex flex-col sm:flex-row gap-4 md:gap-10">
+					<div class="hidden sm:block text-[#1793d1] whitespace-pre text-[10px] md:text-[11px] leading-[1.1]">{`
        /\\
       /  \\
      /\\   \\
@@ -754,29 +892,29 @@
  /_-''    ''-_\\`}</div>
 
 					<div class="flex-1 space-y-1">
-						<div class="text-[#1793d1] font-bold mb-2">
+						<div class="text-[#1793d1] font-bold mb-2 text-[12px] md:text-[14px]">
 							{fullSystemInfo.user}@{fullSystemInfo.host}
 						</div>
 						<div class="w-full h-px bg-[#27272a] mb-2"></div>
 
 						{#each Object.entries(fullSystemInfo) as [key, value]}
 							{#if key !== 'user' && key !== 'host'}
-								<div class="flex">
-									<span class="text-[#1793d1] min-w-[100px]">{key}</span>
-									<span class="text-[#71717a] mx-2">→</span>
-									<span class="text-[#fafafa]">{value}</span>
+								<div class="flex flex-wrap">
+									<span class="text-[#1793d1] min-w-[70px] md:min-w-[100px]">{key}</span>
+									<span class="text-[#71717a] mx-1 md:mx-2">→</span>
+									<span class="text-[#fafafa] break-all">{value}</span>
 								</div>
 							{/if}
 						{/each}
 
-						<div class="flex gap-1 mt-4 pt-4 border-t border-[#27272a]">
+						<div class="flex gap-1 mt-4 pt-4 border-t border-[#27272a] flex-wrap">
 							{#each ['#0d0d0f', '#ff5f57', '#28c840', '#febc2e', '#1793d1', '#a855f7', '#06b6d4', '#fafafa'] as color}
-								<div class="w-6 h-6 rounded" style="background-color: {color}"></div>
+								<div class="w-5 h-5 md:w-6 md:h-6 rounded" style="background-color: {color}"></div>
 							{/each}
 						</div>
-						<div class="flex gap-1">
+						<div class="flex gap-1 flex-wrap">
 							{#each ['#27272a', '#ef4444', '#22c55e', '#eab308', '#3b82f6', '#c084fc', '#22d3ee', '#a1a1aa'] as color}
-								<div class="w-6 h-6 rounded" style="background-color: {color}"></div>
+								<div class="w-5 h-5 md:w-6 md:h-6 rounded" style="background-color: {color}"></div>
 							{/each}
 						</div>
 					</div>
@@ -798,11 +936,11 @@
 	>
 		<div class="absolute inset-0 bg-black/80 backdrop-blur-sm animate-fade-in"></div>
 
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div
-			class="relative bg-[#0d0d0f] border border-[#27272a] overflow-hidden animate-scale-in smooth {spotifyModalFullscreen ? 'w-full h-full rounded-none' : 'w-full max-w-2xl rounded-2xl'}"
+			class="relative bg-[#0d0d0f] border border-[#27272a] overflow-hidden animate-scale-in smooth {spotifyModalFullscreen ? 'w-full h-full rounded-none' : 'w-full max-w-2xl max-h-[90vh] rounded-xl md:rounded-2xl'}"
 			onclick={(e) => e.stopPropagation()}
-			onkeydown={(e) => e.key === 'Enter' && e.stopPropagation()}
-			role="document"
 		>
 			<div class="flex items-center justify-between px-4 py-3 bg-[#18181b] border-b border-[#27272a]">
 				<div class="flex items-center gap-2">
@@ -822,62 +960,178 @@
 				</div>
 			</div>
 
-			<div class="p-8 {spotifyModalFullscreen ? 'h-[calc(100%-52px)] flex items-center justify-center' : ''}">
-				<div class="flex flex-col items-center gap-6 {spotifyModalFullscreen ? 'scale-125' : ''}">
-					{#if currentTrack?.cover}
-						<div class="relative">
-							<div class="absolute -inset-4 blur-3xl opacity-50">
-								<img src={currentTrack.cover} alt="" class="size-48 rounded-2xl" />
+			<div class="{spotifyModalFullscreen ? 'h-[calc(100%-52px)] flex flex-col' : 'p-4 md:p-6'}">
+				{#if spotifyModalFullscreen}
+					<!-- Fullscreen Spotify Client Style -->
+					<div class="flex-1 flex flex-col relative overflow-hidden">
+						<!-- Background gradient from album -->
+						{#if currentTrack?.cover}
+							<div class="absolute inset-0 opacity-30">
+								<img src={currentTrack.cover} alt="" class="w-full h-full object-cover blur-3xl scale-150" />
 							</div>
-							<img
-								src={currentTrack.cover}
-								alt="Album"
-								class="relative size-48 rounded-2xl object-cover shadow-2xl ring-1 ring-white/10"
-							/>
-						</div>
-					{:else}
-						<div class="flex justify-center items-center size-48 rounded-2xl bg-neutral-900/50 ring-1 ring-white/10">
-							<Icon icon="mingcute:music-2-line" class="text-[#71717a]" width="48" />
-						</div>
-					{/if}
+							<div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0d0d0f]/80 to-[#0d0d0f]"></div>
+						{/if}
 
-					<div class="text-center">
-						<h2 class="font-[family-name:var(--font-raleway)] text-[#fafafa] font-bold text-2xl mb-2">
-							{currentTrack ? currentTrack.name : "Ничего не играет"}
-						</h2>
-						<p class="text-[#a1a1aa] text-[14px]">
-							{currentTrack ? currentTrack.artist : 'Включи что-нибудь в Spotify'}
-						</p>
-					</div>
+						<!-- Main content -->
+						<div class="relative flex-1 flex items-center justify-center p-8">
+							<div class="flex flex-col md:flex-row items-center gap-8 md:gap-12 max-w-4xl w-full">
+								<!-- Album art -->
+								{#if currentTrack?.cover}
+									<img
+										src={currentTrack.cover}
+										alt="Album"
+										class="size-48 md:size-72 rounded-lg shadow-2xl"
+									/>
+								{:else}
+									<div class="flex justify-center items-center size-48 md:size-72 rounded-lg bg-[#282828]">
+										<Icon icon="mingcute:music-2-line" class="text-[#535353]" width="80" />
+									</div>
+								{/if}
 
-					{#if currentTrack}
-						<div class="w-full max-w-md">
-							<div class="flex items-center gap-4 w-full">
-								<span class="text-[#71717a] text-[12px] min-w-[35px]">
-									{formatTime(currentTrack.progress)}
-								</span>
-								<div class="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-									<div
-										class="h-full bg-green-500 rounded-full smooth"
-										style="width: {(currentTrack.progress / currentTrack.duration) * 100}%"
-									></div>
+								<!-- Track info -->
+								<div class="flex-1 text-center md:text-left">
+									<p class="text-[#a1a1aa] text-[11px] md:text-[12px] uppercase tracking-wider mb-2">Сейчас играет</p>
+									<h2 class="font-[family-name:var(--font-raleway)] text-[#fafafa] font-bold text-2xl md:text-4xl mb-2">
+										{currentTrack ? currentTrack.name : "Ничего не играет"}
+									</h2>
+									<p class="text-[#a1a1aa] text-base md:text-lg">
+										{currentTrack ? currentTrack.artist : 'Включи что-нибудь в Spotify'}
+									</p>
+									{#if currentTrack?.album}
+										<p class="text-[#71717a] text-[13px] md:text-[14px] mt-1">{currentTrack.album}</p>
+									{/if}
 								</div>
-								<span class="text-[#71717a] text-[12px] min-w-[35px]">
-									{formatTime(currentTrack.duration)}
-								</span>
 							</div>
 						</div>
 
-						<div class="flex items-center gap-2 text-green-500">
-							<div class="flex gap-1 items-center">
-								<span class="w-1 h-3 bg-green-500 rounded-full animate-pulse"></span>
-								<span class="w-1 h-4 bg-green-500 rounded-full animate-pulse" style="animation-delay: 0.2s"></span>
-								<span class="w-1 h-2 bg-green-500 rounded-full animate-pulse" style="animation-delay: 0.4s"></span>
-							</div>
-							<span class="text-[13px]">Сейчас играет</span>
+						<!-- Bottom player bar -->
+						<div class="relative bg-[#181818] border-t border-[#282828] p-4 md:p-6">
+							{#if currentTrack}
+								<!-- Progress bar -->
+								<div class="flex items-center gap-3 md:gap-4 mb-4 max-w-2xl mx-auto">
+									<span class="text-[#a1a1aa] text-[11px] min-w-[35px] text-right">
+										{formatTime(currentTrack.progress)}
+									</span>
+									<div class="flex-1 h-1 bg-[#535353] rounded-full overflow-hidden group cursor-not-allowed">
+										<div
+											class="h-full bg-[#1db954] rounded-full"
+											style="width: {(currentTrack.progress / currentTrack.duration) * 100}%"
+										></div>
+									</div>
+									<span class="text-[#a1a1aa] text-[11px] min-w-[35px]">
+										{formatTime(currentTrack.duration)}
+									</span>
+								</div>
+
+								<!-- Controls -->
+								<div class="flex items-center justify-center gap-4 md:gap-6">
+									<!-- Shuffle (disabled) -->
+									<button class="text-[#535353] cursor-not-allowed" disabled title="Недоступно">
+										<Icon icon="mingcute:shuffle-line" width="20" />
+									</button>
+									<!-- Previous (disabled) -->
+									<button class="text-[#535353] cursor-not-allowed" disabled title="Недоступно">
+										<Icon icon="mingcute:skip-previous-fill" width="28" />
+									</button>
+									<!-- Play/Pause (disabled) -->
+									<button class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#535353] flex items-center justify-center cursor-not-allowed" disabled title="Недоступно">
+										{#if currentTrack.isPlaying}
+											<Icon icon="mingcute:pause-fill" class="text-[#181818]" width="24" />
+										{:else}
+											<Icon icon="mingcute:play-fill" class="text-[#181818]" width="24" />
+										{/if}
+									</button>
+									<!-- Next (disabled) -->
+									<button class="text-[#535353] cursor-not-allowed" disabled title="Недоступно">
+										<Icon icon="mingcute:skip-forward-fill" width="28" />
+									</button>
+									<!-- Repeat (disabled) -->
+									<button class="text-[#535353] cursor-not-allowed" disabled title="Недоступно">
+										<Icon icon="mingcute:repeat-line" width="20" />
+									</button>
+								</div>
+
+								<!-- Volume and device -->
+								<div class="flex items-center justify-between mt-4 max-w-2xl mx-auto">
+									<div class="flex items-center gap-2 text-[#a1a1aa]">
+										{#if currentTrack.volumePercent !== undefined && currentTrack.volumePercent !== null}
+											<Icon icon="mingcute:volume-line" width="16" />
+											<div class="w-20 h-1 bg-[#535353] rounded-full overflow-hidden cursor-not-allowed">
+												<div class="h-full bg-[#a1a1aa] rounded-full" style="width: {currentTrack.volumePercent}%"></div>
+											</div>
+											<span class="text-[11px]">{currentTrack.volumePercent}%</span>
+										{/if}
+									</div>
+									{#if currentTrack.deviceName}
+										<div class="flex items-center gap-2 text-[#1db954]">
+											<Icon icon="mingcute:laptop-2-line" width="16" />
+											<span class="text-[11px]">{currentTrack.deviceName}</span>
+										</div>
+									{/if}
+								</div>
+							{:else}
+								<div class="text-center text-[#71717a] py-4">Включи музыку в Spotify</div>
+							{/if}
 						</div>
-					{/if}
-				</div>
+					</div>
+				{:else}
+					<!-- Normal modal view -->
+					<div class="flex flex-col items-center gap-4 md:gap-6">
+						{#if currentTrack?.cover}
+							<div class="relative">
+								<div class="absolute -inset-3 md:-inset-4 blur-2xl md:blur-3xl opacity-50">
+									<img src={currentTrack.cover} alt="" class="size-32 md:size-48 rounded-xl md:rounded-2xl" />
+								</div>
+								<img
+									src={currentTrack.cover}
+									alt="Album"
+									class="relative size-32 md:size-48 rounded-xl md:rounded-2xl object-cover shadow-2xl ring-1 ring-white/10"
+								/>
+							</div>
+						{:else}
+							<div class="flex justify-center items-center size-32 md:size-48 rounded-xl md:rounded-2xl bg-neutral-900/50 ring-1 ring-white/10">
+								<Icon icon="mingcute:music-2-line" class="text-[#71717a]" width="40" />
+							</div>
+						{/if}
+
+						<div class="text-center w-full">
+							<h2 class="font-[family-name:var(--font-raleway)] text-[#fafafa] font-bold text-lg md:text-2xl mb-1">
+								{currentTrack ? currentTrack.name : "Ничего не играет"}
+							</h2>
+							<p class="text-[#a1a1aa] text-[12px] md:text-[14px]">
+								{currentTrack ? currentTrack.artist : 'Включи что-нибудь в Spotify'}
+							</p>
+						</div>
+
+						{#if currentTrack}
+							<div class="w-full max-w-md">
+								<div class="flex items-center gap-3 md:gap-4 w-full">
+									<span class="text-[#71717a] text-[11px] md:text-[12px] min-w-[30px] md:min-w-[35px]">
+										{formatTime(currentTrack.progress)}
+									</span>
+									<div class="flex-1 h-1 md:h-1.5 bg-white/10 rounded-full overflow-hidden">
+										<div
+											class="h-full bg-green-500 rounded-full smooth"
+											style="width: {(currentTrack.progress / currentTrack.duration) * 100}%"
+										></div>
+									</div>
+									<span class="text-[#71717a] text-[11px] md:text-[12px] min-w-[30px] md:min-w-[35px]">
+										{formatTime(currentTrack.duration)}
+									</span>
+								</div>
+							</div>
+
+							<div class="flex items-center gap-2 text-green-500">
+								<div class="flex gap-0.5 items-center">
+									<span class="w-0.5 md:w-1 h-2 md:h-3 bg-green-500 rounded-full animate-pulse"></span>
+									<span class="w-0.5 md:w-1 h-3 md:h-4 bg-green-500 rounded-full animate-pulse" style="animation-delay: 0.2s"></span>
+									<span class="w-0.5 md:w-1 h-1.5 md:h-2 bg-green-500 rounded-full animate-pulse" style="animation-delay: 0.4s"></span>
+								</div>
+								<span class="text-[11px] md:text-[13px]">Сейчас играет</span>
+							</div>
+						{/if}
+					</div>
+				{/if}
 			</div>
 		</div>
 	</div>
@@ -895,11 +1149,11 @@
 	>
 		<div class="absolute inset-0 bg-black/80 backdrop-blur-sm animate-fade-in"></div>
 
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div
-			class="relative bg-[#0d0d0f] border border-[#27272a] overflow-hidden animate-scale-in smooth {weatherModalFullscreen ? 'w-full h-full rounded-none' : 'w-full max-w-2xl rounded-2xl'}"
+			class="relative bg-[#0d0d0f] border border-[#27272a] overflow-hidden animate-scale-in smooth {weatherModalFullscreen ? 'w-full h-full rounded-none' : 'w-full max-w-2xl max-h-[90vh] rounded-xl md:rounded-2xl'}"
 			onclick={(e) => e.stopPropagation()}
-			onkeydown={(e) => e.key === 'Enter' && e.stopPropagation()}
-			role="document"
 		>
 			<div class="flex items-center justify-between px-4 py-3 bg-[#18181b] border-b border-[#27272a]">
 				<div class="flex items-center gap-2">
@@ -919,56 +1173,154 @@
 				</div>
 			</div>
 
-			<div class="p-6 md:p-8 {weatherModalFullscreen ? 'h-[calc(100%-52px)] overflow-auto' : ''}">
-				{#if weather}
-					<div class="flex flex-col gap-6">
-						<!-- Main weather info -->
-						<div class="flex flex-col gap-4">
-							<div class="flex items-center gap-3">
-								<Icon icon="tabler:map-pin" class="text-[#71717a]" width="16" />
-								<span class="text-[#fafafa] text-[14px]">Санкт-Петербург, Россия</span>
-							</div>
+			<div class="{weatherModalFullscreen ? 'h-[calc(100%-52px)] flex flex-col' : 'p-4 md:p-6'}">
+				{#if weatherModalFullscreen}
+					<!-- Fullscreen Weather Style -->
+					<div class="flex-1 flex flex-col overflow-auto p-6 md:p-8">
+						<div class="max-w-4xl mx-auto w-full space-y-6">
+							<!-- Main weather card -->
+							<div class="bento-item p-6 md:p-8">
+								<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+									<!-- Location and description -->
+									<div>
+										<div class="flex items-center gap-2 mb-2">
+											<Icon icon="tabler:map-pin" class="text-[#71717a]" width="16" />
+											<span class="text-[#a1a1aa] text-sm">Санкт-Петербург, Россия</span>
+										</div>
+										{#if weather}
+											<h1 class="font-[family-name:var(--font-raleway)] text-[#fafafa] font-bold text-6xl md:text-8xl mb-2">
+												{weather.temp}°
+											</h1>
+											<p class="text-[#a1a1aa] text-lg md:text-xl">{weather.description}</p>
+											<p class="text-[#52525b] text-sm mt-1">{weather.tempF}°F</p>
+										{/if}
+									</div>
 
-							<div class="flex items-baseline gap-4">
-								<h2 class="font-[family-name:var(--font-raleway)] text-[#fafafa] font-bold text-5xl md:text-6xl">
-									{weather.temp}°C
-								</h2>
-								<span class="text-[#71717a] text-lg">{weather.tempF}°F</span>
-							</div>
-
-							<p class="text-[#a1a1aa] text-lg">{weather.description}</p>
-						</div>
-
-						<!-- Weather details grid -->
-						<div class="grid grid-cols-2 gap-3 md:gap-4">
-							<div class="bento-item p-4">
-								<div class="flex items-center gap-2 mb-2">
-									<Icon icon="mingcute:sun-line" class="text-amber-400" width="16" />
-									<span class="text-[#71717a] text-[11px] uppercase tracking-wider">UV Индекс</span>
+									<!-- Weather Icon -->
+									<div class="hidden md:block">
+										{#if weather?.description === 'Ясно'}
+											<Icon icon="mingcute:sun-line" class="text-[#71717a]" width="80" />
+										{:else if weather?.description === 'Облачно'}
+											<Icon icon="mingcute:cloud-line" class="text-[#71717a]" width="80" />
+										{:else if weather?.description === 'Дождь'}
+											<Icon icon="mingcute:rainy-line" class="text-[#71717a]" width="80" />
+										{:else if weather?.description === 'Снег'}
+											<Icon icon="mingcute:snow-line" class="text-[#71717a]" width="80" />
+										{:else if weather?.description === 'Гроза'}
+											<Icon icon="mingcute:thunderstorm-line" class="text-[#71717a]" width="80" />
+										{:else}
+											<Icon icon="mingcute:haze-line" class="text-[#71717a]" width="80" />
+										{/if}
+									</div>
 								</div>
-								<span class="text-2xl font-bold font-[family-name:var(--font-raleway)]" style="color: {getUvColor(weather.uvIndex)}">
-									{weather.uvIndex.toFixed(1)}
-								</span>
-								<p class="text-[#52525b] text-[11px] mt-1">
-									{#if weather.uvIndex <= 2}Низкий{:else if weather.uvIndex <= 5}Умеренный{:else if weather.uvIndex <= 7}Высокий{:else}Очень высокий{/if}
-								</p>
 							</div>
-							<div class="bento-item p-4">
-								<div class="flex items-center gap-2 mb-2">
-									<Icon icon="mingcute:wind-line" class="text-cyan-400" width="16" />
-									<span class="text-[#71717a] text-[11px] uppercase tracking-wider">Воздух</span>
+
+							<!-- Weather details grid -->
+							<div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+								<!-- UV Index -->
+								<div class="bento-item p-4">
+									<div class="flex items-center gap-2 mb-2">
+										<Icon icon="mingcute:sun-line" class="text-[#71717a]" width="16" />
+										<span class="text-[#71717a] text-[10px] uppercase tracking-wider">UV Индекс</span>
+									</div>
+									<span class="text-2xl md:text-3xl font-bold font-[family-name:var(--font-raleway)]" style="color: {weather ? getUvColor(weather.uvIndex) : '#fafafa'}">
+										{weather?.uvIndex.toFixed(1) || '—'}
+									</span>
+									<p class="text-[#52525b] text-[11px] mt-1">
+										{#if weather}
+											{#if weather.uvIndex <= 2}Низкий{:else if weather.uvIndex <= 5}Умеренный{:else if weather.uvIndex <= 7}Высокий{:else}Очень высокий{/if}
+										{/if}
+									</p>
 								</div>
-								<span class="text-2xl font-bold font-[family-name:var(--font-raleway)]" style="color: {getAirColor(weather.airQuality)}">
-									{weather.airQuality}
-								</span>
-								<p class="text-[#52525b] text-[11px] mt-1">
-									{#if weather.airQuality <= 50}Хорошо{:else if weather.airQuality <= 100}Приемлемо{:else if weather.airQuality <= 150}Умеренно{:else}Плохо{/if}
-								</p>
+
+								<!-- Air Quality -->
+								<div class="bento-item p-4">
+									<div class="flex items-center gap-2 mb-2">
+										<Icon icon="mingcute:wind-line" class="text-[#71717a]" width="16" />
+										<span class="text-[#71717a] text-[10px] uppercase tracking-wider">Воздух</span>
+									</div>
+									<span class="text-2xl md:text-3xl font-bold font-[family-name:var(--font-raleway)]" style="color: {weather ? getAirColor(weather.airQuality) : '#fafafa'}">
+										{weather?.airQuality || '—'}
+									</span>
+									<p class="text-[#52525b] text-[11px] mt-1">
+										{#if weather}
+											{#if weather.airQuality <= 50}Хорошо{:else if weather.airQuality <= 100}Приемлемо{:else if weather.airQuality <= 150}Умеренно{:else}Плохо{/if}
+										{/if}
+									</p>
+								</div>
+
+								<!-- Humidity placeholder -->
+								<div class="bento-item p-4">
+									<div class="flex items-center gap-2 mb-2">
+										<Icon icon="mingcute:drop-line" class="text-[#71717a]" width="16" />
+										<span class="text-[#71717a] text-[10px] uppercase tracking-wider">Влажность</span>
+									</div>
+									<span class="text-[#fafafa] text-2xl md:text-3xl font-bold font-[family-name:var(--font-raleway)]">—</span>
+									<p class="text-[#52525b] text-[11px] mt-1">Нет данных</p>
+								</div>
+
+								<!-- Wind placeholder -->
+								<div class="bento-item p-4">
+									<div class="flex items-center gap-2 mb-2">
+										<Icon icon="mingcute:windy-line" class="text-[#71717a]" width="16" />
+										<span class="text-[#71717a] text-[10px] uppercase tracking-wider">Ветер</span>
+									</div>
+									<span class="text-[#fafafa] text-2xl md:text-3xl font-bold font-[family-name:var(--font-raleway)]">—</span>
+									<p class="text-[#52525b] text-[11px] mt-1">Нет данных</p>
+								</div>
 							</div>
 						</div>
 					</div>
 				{:else}
-					<div class="text-[#71717a] text-[13px]">Загрузка...</div>
+					<!-- Normal modal view -->
+					{#if weather}
+						<div class="flex flex-col gap-4 md:gap-6">
+							<div class="flex flex-col gap-3">
+								<div class="flex items-center gap-2">
+									<Icon icon="tabler:map-pin" class="text-[#71717a]" width="14" />
+									<span class="text-[#fafafa] text-[12px] md:text-[14px]">Санкт-Петербург, Россия</span>
+								</div>
+
+								<div class="flex items-baseline gap-3">
+									<h2 class="font-[family-name:var(--font-raleway)] text-[#fafafa] font-bold text-4xl md:text-6xl">
+										{weather.temp}°C
+									</h2>
+									<span class="text-[#71717a] text-base md:text-lg">{weather.tempF}°F</span>
+								</div>
+
+								<p class="text-[#a1a1aa] text-base md:text-lg">{weather.description}</p>
+							</div>
+
+							<div class="grid grid-cols-2 gap-2 md:gap-4">
+								<div class="bento-item p-3 md:p-4">
+									<div class="flex items-center gap-2 mb-1 md:mb-2">
+										<Icon icon="mingcute:sun-line" class="text-amber-400" width="14" />
+										<span class="text-[#71717a] text-[10px] md:text-[11px] uppercase tracking-wider">UV Индекс</span>
+									</div>
+									<span class="text-xl md:text-2xl font-bold font-[family-name:var(--font-raleway)]" style="color: {getUvColor(weather.uvIndex)}">
+										{weather.uvIndex.toFixed(1)}
+									</span>
+									<p class="text-[#52525b] text-[10px] md:text-[11px] mt-1">
+										{#if weather.uvIndex <= 2}Низкий{:else if weather.uvIndex <= 5}Умеренный{:else if weather.uvIndex <= 7}Высокий{:else}Очень высокий{/if}
+									</p>
+								</div>
+								<div class="bento-item p-3 md:p-4">
+									<div class="flex items-center gap-2 mb-1 md:mb-2">
+										<Icon icon="mingcute:wind-line" class="text-cyan-400" width="14" />
+										<span class="text-[#71717a] text-[10px] md:text-[11px] uppercase tracking-wider">Воздух</span>
+									</div>
+									<span class="text-xl md:text-2xl font-bold font-[family-name:var(--font-raleway)]" style="color: {getAirColor(weather.airQuality)}">
+										{weather.airQuality}
+									</span>
+									<p class="text-[#52525b] text-[10px] md:text-[11px] mt-1">
+										{#if weather.airQuality <= 50}Хорошо{:else if weather.airQuality <= 100}Приемлемо{:else if weather.airQuality <= 150}Умеренно{:else}Плохо{/if}
+									</p>
+								</div>
+							</div>
+						</div>
+					{:else}
+						<div class="text-[#71717a] text-[12px]">Загрузка...</div>
+					{/if}
 				{/if}
 			</div>
 		</div>
@@ -987,11 +1339,11 @@
 	>
 		<div class="absolute inset-0 bg-black/80 backdrop-blur-sm animate-fade-in"></div>
 
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<div
-			class="relative bg-[#0d0d0f] border border-[#27272a] overflow-hidden animate-scale-in smooth {aboutModalFullscreen ? 'w-full h-full rounded-none' : 'w-full max-w-2xl rounded-2xl'}"
+			class="relative bg-[#0d0d0f] border border-[#27272a] overflow-hidden animate-scale-in smooth {aboutModalFullscreen ? 'w-full h-full rounded-none' : 'w-full max-w-2xl max-h-[90vh] rounded-xl md:rounded-2xl'}"
 			onclick={(e) => e.stopPropagation()}
-			onkeydown={(e) => e.key === 'Enter' && e.stopPropagation()}
-			role="document"
 		>
 			<div class="flex items-center justify-between px-4 py-3 bg-[#18181b] border-b border-[#27272a]">
 				<div class="flex items-center gap-2">
@@ -1011,25 +1363,106 @@
 				</div>
 			</div>
 
-			<div class="p-6 md:p-8 {aboutModalFullscreen ? 'h-[calc(100%-52px)] overflow-auto' : ''}">
-				<div class="flex flex-col gap-4 md:gap-5">
-					<!-- About section -->
-					<div class="bento-item p-4">
-						<div class="flex items-center gap-2 mb-2">
-							<Icon icon="mingcute:user-4-line" class="text-[#71717a]" width="14" />
-							<span class="text-[#71717a] text-[10px] md:text-[11px] uppercase tracking-wider">О себе</span>
+			<div class="{aboutModalFullscreen ? 'h-[calc(100%-52px)] flex flex-col' : 'p-4 md:p-6'}">
+				{#if aboutModalFullscreen}
+					<!-- Fullscreen Profile Style -->
+					<div class="flex-1 overflow-auto p-6 md:p-8">
+						<div class="max-w-4xl mx-auto space-y-6">
+							<!-- Profile header card -->
+							<div class="bento-item p-6 md:p-8">
+								<div class="flex flex-col md:flex-row md:items-center gap-6">
+									<!-- Profile icon -->
+									<div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[#18181b] border border-[#27272a] flex items-center justify-center shrink-0">
+										<Icon icon="mingcute:user-4-fill" class="text-[#52525b]" width="40" />
+									</div>
+
+									<div class="flex-1">
+										<h1 class="font-[family-name:var(--font-raleway)] text-[#fafafa] font-bold text-2xl md:text-4xl mb-2">newer__</h1>
+										<p class="text-[#71717a] text-sm md:text-base mb-4">Full-stack Developer</p>
+
+										<!-- Social links -->
+										<div class="flex gap-2">
+											<a href="https://t.me/mkphotoss" target="_blank" class="p-2.5 rounded-lg bg-[#18181b] border border-[#27272a] text-[#71717a] hover:text-[#fafafa] hover:border-[#3f3f46] smooth">
+												<Icon icon="mingcute:telegram-line" width="18" />
+											</a>
+											<a href="https://discordapp.com/users/{discordUserId}" target="_blank" class="p-2.5 rounded-lg bg-[#18181b] border border-[#27272a] text-[#71717a] hover:text-[#fafafa] hover:border-[#3f3f46] smooth">
+												<Icon icon="mingcute:discord-line" width="18" />
+											</a>
+											<a href="https://github.com/Flowery-arch" target="_blank" class="p-2.5 rounded-lg bg-[#18181b] border border-[#27272a] text-[#71717a] hover:text-[#fafafa] hover:border-[#3f3f46] smooth">
+												<Icon icon="mingcute:github-line" width="18" />
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- About section -->
+							<div class="bento-item p-5 md:p-6">
+								<div class="flex items-center gap-2 mb-3">
+									<Icon icon="mingcute:information-line" class="text-[#71717a]" width="16" />
+									<h2 class="text-[#71717a] text-[11px] uppercase tracking-wider">О себе</h2>
+								</div>
+								<p class="text-[#a1a1aa] text-[13px] leading-relaxed">
+									Специализируюсь на создании веб-платформ для Minecraft проектов, Discord ботов и API сервисов.
+									Создаю функциональные сайты с современным дизайном, автоматизирую процессы через ботов.
+								</p>
+							</div>
+
+							<!-- Skills section -->
+							<div class="bento-item p-5 md:p-6">
+								<div class="flex items-center gap-2 mb-4">
+									<Icon icon="mingcute:code-line" class="text-[#71717a]" width="16" />
+									<h2 class="text-[#71717a] text-[11px] uppercase tracking-wider">Навыки</h2>
+								</div>
+								<div class="flex flex-wrap gap-2">
+									{#each ['TypeScript', 'React', 'Svelte', 'Next.js', 'Node.js', 'Bun', 'PostgreSQL', 'TailwindCSS'] as skill}
+										<span class="px-3 py-1.5 rounded-lg bg-[#18181b] border border-[#27272a] text-[#a1a1aa] text-[12px]">
+											{skill}
+										</span>
+									{/each}
+								</div>
+							</div>
+
+							<!-- Specializations -->
+							<div class="grid md:grid-cols-3 gap-3 md:gap-4">
+								<div class="bento-item p-5">
+									<Icon icon="mingcute:world-2-line" class="text-[#71717a] mb-3" width="24" />
+									<h3 class="text-[#fafafa] font-medium mb-2 text-sm">Web Development</h3>
+									<p class="text-[#52525b] text-[12px]">Современные веб-приложения с SvelteKit, Next.js и React</p>
+								</div>
+								<div class="bento-item p-5">
+									<Icon icon="mingcute:discord-line" class="text-[#71717a] mb-3" width="24" />
+									<h3 class="text-[#fafafa] font-medium mb-2 text-sm">Discord Bots</h3>
+									<p class="text-[#52525b] text-[12px]">Боты с Discord.js и Sapphire framework</p>
+								</div>
+								<div class="bento-item p-5">
+									<Icon icon="mingcute:game-2-line" class="text-[#71717a] mb-3" width="24" />
+									<h3 class="text-[#fafafa] font-medium mb-2 text-sm">Minecraft</h3>
+									<p class="text-[#52525b] text-[12px]">Плагины на Java с Paper API</p>
+								</div>
+							</div>
 						</div>
-						<p class="text-[#a1a1aa] text-[12px] md:text-[13px] leading-relaxed">
-							Специализируюсь на создании веб-платформ для Minecraft проектов, Discord ботов и API сервисов.
-							Создаю функциональные сайты с современным дизайном, автоматизирую процессы через ботов.
-						</p>
 					</div>
+				{:else}
+					<!-- Normal modal view -->
+					<div class="flex flex-col gap-3 md:gap-4">
+						<!-- About section -->
+						<div class="bento-item p-3 md:p-4">
+							<div class="flex items-center gap-2 mb-2">
+								<Icon icon="mingcute:user-4-line" class="text-[#71717a]" width="14" />
+								<span class="text-[#71717a] text-[10px] md:text-[11px] uppercase tracking-wider">О себе</span>
+							</div>
+							<p class="text-[#a1a1aa] text-[11px] md:text-[13px] leading-relaxed">
+								Специализируюсь на создании веб-платформ для Minecraft проектов, Discord ботов и API сервисов.
+								Создаю функциональные сайты с современным дизайном, автоматизирую процессы через ботов.
+							</p>
+						</div>
 
 					<!-- Skills section with collapse -->
 					<div class="bento-item overflow-hidden">
 						<button
 							onclick={() => skillsCollapsed = !skillsCollapsed}
-							class="w-full p-4 flex items-center justify-between cursor-pointer hover:bg-white/5 smooth"
+							class="w-full p-3 md:p-4 flex items-center justify-between cursor-pointer hover:bg-white/5 smooth"
 						>
 							<div class="flex items-center gap-2">
 								<Icon icon="mingcute:code-line" class="text-[#71717a]" width="14" />
@@ -1042,33 +1475,33 @@
 							/>
 						</button>
 						<div class="skills-content {skillsCollapsed ? 'collapsed' : ''}">
-							<div class="px-4 pb-4">
-								<div class="flex flex-wrap gap-2 mb-4">
+							<div class="px-3 md:px-4 pb-3 md:pb-4">
+								<div class="flex flex-wrap gap-1.5 md:gap-2 mb-3 md:mb-4">
 									{#each ['Next.js', 'React', 'Svelte', 'TypeScript', 'Bun', 'Node.js', 'TailwindCSS', 'PostgreSQL'] as skill}
-										<span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] text-[11px] md:text-[12px]">
+										<span class="px-2 md:px-2.5 py-0.5 md:py-1 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] text-[10px] md:text-[12px]">
 											{skill}
 										</span>
 									{/each}
 								</div>
 
 								<!-- Code snippet -->
-								<div class="rounded-xl bg-[#0d0d0f] border border-[#27272a] overflow-hidden">
-									<div class="flex items-center justify-between px-3 py-2 border-b border-[#27272a]">
-										<span class="text-[#52525b] text-[10px]">About.svelte</span>
+								<div class="rounded-lg md:rounded-xl bg-[#0d0d0f] border border-[#27272a] overflow-hidden">
+									<div class="flex items-center justify-between px-2 md:px-3 py-1.5 md:py-2 border-b border-[#27272a]">
+										<span class="text-[#52525b] text-[9px] md:text-[10px]">About.svelte</span>
 										<button
 											onclick={copyCode}
-											class="flex items-center gap-1.5 px-2 py-1 rounded-md text-[#52525b] hover:text-[#fafafa] hover:bg-white/5 smooth text-[10px]"
+											class="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 md:py-1 rounded-md text-[#52525b] hover:text-[#fafafa] hover:bg-white/5 smooth text-[9px] md:text-[10px]"
 										>
 											{#if codeCopied}
-												<Icon icon="mingcute:check-line" width="11" class="text-green-500" />
-												<span class="text-green-500">Скопировано</span>
+												<Icon icon="mingcute:check-line" width="10" class="text-green-500" />
+												<span class="text-green-500 hidden sm:inline">Скопировано</span>
 											{:else}
-												<Icon icon="mingcute:copy-2-line" width="11" />
-												<span>Копировать</span>
+												<Icon icon="mingcute:copy-2-line" width="10" />
+												<span class="hidden sm:inline">Копировать</span>
 											{/if}
 										</button>
 									</div>
-									<pre class="p-3 text-[11px] font-mono overflow-x-auto"><code class="text-[#71717a]"><span class="text-purple-400">&lt;script&gt;</span>
+									<pre class="p-2 md:p-3 text-[10px] md:text-[11px] font-mono overflow-x-auto"><code class="text-[#71717a]"><span class="text-purple-400">&lt;script&gt;</span>
   <span class="text-blue-400">import</span> About <span class="text-blue-400">from</span> <span class="text-green-400">'./About.svelte'</span>;
 <span class="text-purple-400">&lt;/script&gt;</span>
 
@@ -1079,27 +1512,325 @@
 					</div>
 
 					<!-- Contact section -->
-					<div class="bento-item p-4">
-						<div class="flex items-center gap-2 mb-3">
+					<div class="bento-item p-3 md:p-4">
+						<div class="flex items-center gap-2 mb-2 md:mb-3">
 							<Icon icon="mingcute:mail-line" class="text-[#71717a]" width="14" />
 							<span class="text-[#71717a] text-[10px] md:text-[11px] uppercase tracking-wider">Связаться</span>
 						</div>
-						<div class="flex flex-wrap gap-2">
-							<a href="https://t.me/mkphotoss" target="_blank" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] hover:text-[#fafafa] hover:border-white/20 smooth">
+						<div class="flex flex-wrap gap-1.5 md:gap-2">
+							<a href="https://t.me/mkphotoss" target="_blank" class="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] hover:text-[#fafafa] hover:border-white/20 smooth">
 								<Icon icon="mingcute:telegram-line" width="14" />
-								<span class="text-[11px] md:text-[12px]">Telegram</span>
+								<span class="text-[10px] md:text-[12px]">Telegram</span>
 							</a>
-							<a href="https://discordapp.com/users/{discordUserId}" target="_blank" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] hover:text-[#fafafa] hover:border-white/20 smooth">
+							<a href="https://discordapp.com/users/{discordUserId}" target="_blank" class="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] hover:text-[#fafafa] hover:border-white/20 smooth">
 								<Icon icon="mingcute:discord-line" width="14" />
-								<span class="text-[11px] md:text-[12px]">Discord</span>
+								<span class="text-[10px] md:text-[12px]">Discord</span>
 							</a>
-							<a href="https://github.com/Flowery-arch" target="_blank" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] hover:text-[#fafafa] hover:border-white/20 smooth">
+							<a href="https://github.com/Flowery-arch" target="_blank" class="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] hover:text-[#fafafa] hover:border-white/20 smooth">
 								<Icon icon="mingcute:github-line" width="14" />
-								<span class="text-[11px] md:text-[12px]">GitHub</span>
+								<span class="text-[10px] md:text-[12px]">GitHub</span>
 							</a>
 						</div>
 					</div>
+					</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+{/if}
+
+<!-- Tiled View (Hyprland-style) -->
+{#if showTiledView}
+	<div
+		class="fixed inset-0 z-[200] bg-black/90 backdrop-blur-md animate-fade-in"
+		onclick={closeTiledView}
+		onkeydown={(e) => e.key === 'Escape' && closeTiledView()}
+		role="dialog"
+		aria-modal="true"
+		tabindex="-1"
+	>
+		<!-- Tiled container -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<div
+			class="h-full flex flex-col p-4 md:p-6"
+			onclick={(e) => e.stopPropagation()}
+		>
+			<!-- Header -->
+			<div class="flex items-center justify-between mb-4">
+				<div class="flex items-center gap-3">
+					<Icon icon="mingcute:layout-grid-line" class="text-[#71717a]" width="18" />
+					<span class="text-[#a1a1aa] text-[13px]">Открытые окна ({tiledModals.length})</span>
 				</div>
+				<button
+					onclick={closeTiledView}
+					class="p-2 rounded-lg bg-[#18181b] border border-[#27272a] text-[#71717a] hover:text-[#fafafa] hover:border-[#3f3f46] smooth"
+				>
+					<Icon icon="mingcute:close-line" width="18" />
+				</button>
+			</div>
+
+			<!-- Tiled grid -->
+			<div class="flex-1 min-h-0 grid gap-3 {tiledModals.length === 2 ? 'grid-cols-1 md:grid-cols-2' : tiledModals.length === 3 ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-2'}">
+				{#each tiledModals as modalId}
+					{@const isActive = activeTiledModal === modalId}
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
+					<div
+						ondblclick={() => expandFromTiled(modalId)}
+						class="relative bg-[#0d0d0f] border rounded-xl overflow-hidden flex flex-col min-h-0 smooth
+							{isActive ? 'border-[#3f3f46]' : 'border-[#27272a] hover:border-[#3f3f46]'}"
+					>
+						<!-- Modal header -->
+						<div class="flex-shrink-0 flex items-center justify-between px-3 py-2 bg-[#18181b] border-b border-[#27272a]">
+							<div class="flex items-center gap-2">
+								<Icon icon={getModalIcon(modalId)} class="text-[#71717a]" width="14" />
+								<span class="text-[#a1a1aa] text-[11px]">{getModalTitle(modalId)}</span>
+							</div>
+							<div class="flex gap-1.5">
+								<button
+									onclick={(e) => { e.stopPropagation(); closeFromTiled(modalId); }}
+									class="w-3 h-3 rounded-full bg-[#ff5f57] hover:scale-110 smooth"
+									aria-label="Закрыть"
+								></button>
+								<button
+									onclick={(e) => { e.stopPropagation(); }}
+									class="w-3 h-3 rounded-full bg-[#febc2e] hover:scale-110 smooth"
+									aria-label="Свернуть"
+								></button>
+								<button
+									onclick={(e) => { e.stopPropagation(); expandFromTiled(modalId); }}
+									class="w-3 h-3 rounded-full bg-[#28c840] hover:scale-110 smooth"
+									aria-label="Развернуть"
+								></button>
+							</div>
+						</div>
+
+						<!-- Modal content - такой же как в обычных модалках -->
+						<div class="flex-1 min-h-0 p-4 overflow-auto">
+							{#if modalId === 'system'}
+								<!-- System content - как в обычной модалке -->
+								<div class="font-mono text-[11px] md:text-[13px] leading-relaxed">
+									<div class="flex flex-col sm:flex-row gap-4 md:gap-10">
+										<div class="hidden sm:block text-[#1793d1] whitespace-pre text-[10px] md:text-[11px] leading-[1.1]">{`
+       /\\
+      /  \\
+     /\\   \\
+    /      \\
+   /   ,,   \\
+  /   |  |  -\\
+ /_-''    ''-_\\`}</div>
+
+										<div class="flex-1 space-y-1">
+											<div class="text-[#1793d1] font-bold mb-2 text-[12px] md:text-[14px]">
+												{fullSystemInfo.user}@{fullSystemInfo.host}
+											</div>
+											<div class="w-full h-px bg-[#27272a] mb-2"></div>
+
+											{#each Object.entries(fullSystemInfo) as [key, value]}
+												{#if key !== 'user' && key !== 'host'}
+													<div class="flex flex-wrap">
+														<span class="text-[#1793d1] min-w-[70px] md:min-w-[100px]">{key}</span>
+														<span class="text-[#71717a] mx-1 md:mx-2">→</span>
+														<span class="text-[#fafafa] break-all">{value}</span>
+													</div>
+												{/if}
+											{/each}
+
+											<div class="flex gap-1 mt-4 pt-4 border-t border-[#27272a] flex-wrap">
+												{#each ['#0d0d0f', '#ff5f57', '#28c840', '#febc2e', '#1793d1', '#a855f7', '#06b6d4', '#fafafa'] as color}
+													<div class="w-5 h-5 md:w-6 md:h-6 rounded" style="background-color: {color}"></div>
+												{/each}
+											</div>
+											<div class="flex gap-1 flex-wrap">
+												{#each ['#27272a', '#ef4444', '#22c55e', '#eab308', '#3b82f6', '#c084fc', '#22d3ee', '#a1a1aa'] as color}
+													<div class="w-5 h-5 md:w-6 md:h-6 rounded" style="background-color: {color}"></div>
+												{/each}
+											</div>
+										</div>
+									</div>
+								</div>
+							{:else if modalId === 'spotify'}
+								<!-- Spotify content - точно как в обычной модалке -->
+								<div class="flex flex-col items-center gap-4 md:gap-6">
+									{#if currentTrack?.cover}
+										<div class="relative">
+											<div class="absolute -inset-3 md:-inset-4 blur-2xl md:blur-3xl opacity-50">
+												<img src={currentTrack.cover} alt="" class="size-32 md:size-48 rounded-xl md:rounded-2xl" />
+											</div>
+											<img
+												src={currentTrack.cover}
+												alt="Album"
+												class="relative size-32 md:size-48 rounded-xl md:rounded-2xl object-cover shadow-2xl ring-1 ring-white/10"
+											/>
+										</div>
+									{:else}
+										<div class="flex justify-center items-center size-32 md:size-48 rounded-xl md:rounded-2xl bg-neutral-900/50 ring-1 ring-white/10">
+											<Icon icon="mingcute:music-2-line" class="text-[#71717a]" width="40" />
+										</div>
+									{/if}
+
+									<div class="text-center w-full">
+										<h2 class="font-[family-name:var(--font-raleway)] text-[#fafafa] font-bold text-lg md:text-2xl mb-1">
+											{currentTrack ? currentTrack.name : "Ничего не играет"}
+										</h2>
+										<p class="text-[#a1a1aa] text-[12px] md:text-[14px]">
+											{currentTrack ? currentTrack.artist : 'Включи что-нибудь в Spotify'}
+										</p>
+										{#if currentTrack?.album}
+											<p class="text-[#52525b] text-[11px] md:text-[12px] mt-1">{currentTrack.album}</p>
+										{/if}
+									</div>
+
+									{#if currentTrack}
+										<div class="w-full max-w-md">
+											<div class="flex items-center gap-3 md:gap-4 w-full">
+												<span class="text-[#71717a] text-[11px] md:text-[12px] min-w-[30px] md:min-w-[35px]">
+													{formatTime(currentTrack.progress)}
+												</span>
+												<div class="flex-1 h-1 md:h-1.5 bg-white/10 rounded-full overflow-hidden">
+													<div
+														class="h-full bg-green-500 rounded-full smooth"
+														style="width: {(currentTrack.progress / currentTrack.duration) * 100}%"
+													></div>
+												</div>
+												<span class="text-[#71717a] text-[11px] md:text-[12px] min-w-[30px] md:min-w-[35px]">
+													{formatTime(currentTrack.duration)}
+												</span>
+											</div>
+										</div>
+
+										<div class="flex items-center gap-2 text-green-500">
+											<div class="flex gap-0.5 items-center">
+												<span class="w-0.5 md:w-1 h-2 md:h-3 bg-green-500 rounded-full animate-pulse"></span>
+												<span class="w-0.5 md:w-1 h-3 md:h-4 bg-green-500 rounded-full animate-pulse" style="animation-delay: 0.2s"></span>
+												<span class="w-0.5 md:w-1 h-1.5 md:h-2 bg-green-500 rounded-full animate-pulse" style="animation-delay: 0.4s"></span>
+											</div>
+											<span class="text-[11px] md:text-[13px]">Сейчас играет</span>
+										</div>
+
+										{#if currentTrack.deviceName}
+											<div class="flex items-center gap-2 text-[#52525b] text-[10px] md:text-[11px]">
+												<Icon icon="mingcute:device-line" width="14" />
+												<span>{currentTrack.deviceName}</span>
+												{#if currentTrack.volumePercent !== undefined}
+													<span>• {currentTrack.volumePercent}%</span>
+												{/if}
+											</div>
+										{/if}
+									{/if}
+								</div>
+							{:else if modalId === 'weather'}
+								<!-- Weather content - точно как в обычной модалке -->
+								{#if weather}
+									<div class="flex flex-col gap-4 md:gap-6">
+										<div class="flex flex-col gap-3">
+											<div class="flex items-center gap-2">
+												<Icon icon="tabler:map-pin" class="text-[#71717a]" width="14" />
+												<span class="text-[#fafafa] text-[12px] md:text-[14px]">Санкт-Петербург, Россия</span>
+											</div>
+
+											<div class="flex items-baseline gap-3">
+												<h2 class="font-[family-name:var(--font-raleway)] text-[#fafafa] font-bold text-4xl md:text-6xl">
+													{weather.temp}°C
+												</h2>
+												<span class="text-[#71717a] text-base md:text-lg">{weather.tempF}°F</span>
+											</div>
+
+											<p class="text-[#a1a1aa] text-base md:text-lg">{weather.description}</p>
+										</div>
+
+										<div class="grid grid-cols-2 gap-2 md:gap-4">
+											<div class="bento-item p-3 md:p-4">
+												<div class="flex items-center gap-2 mb-1 md:mb-2">
+													<Icon icon="mingcute:sun-line" class="text-amber-400" width="14" />
+													<span class="text-[#71717a] text-[10px] md:text-[11px] uppercase tracking-wider">UV Индекс</span>
+												</div>
+												<span class="text-xl md:text-2xl font-bold font-[family-name:var(--font-raleway)]" style="color: {getUvColor(weather.uvIndex)}">
+													{weather.uvIndex.toFixed(1)}
+												</span>
+												<p class="text-[#52525b] text-[10px] md:text-[11px] mt-1">
+													{#if weather.uvIndex <= 2}Низкий{:else if weather.uvIndex <= 5}Умеренный{:else if weather.uvIndex <= 7}Высокий{:else}Очень высокий{/if}
+												</p>
+											</div>
+											<div class="bento-item p-3 md:p-4">
+												<div class="flex items-center gap-2 mb-1 md:mb-2">
+													<Icon icon="mingcute:wind-line" class="text-cyan-400" width="14" />
+													<span class="text-[#71717a] text-[10px] md:text-[11px] uppercase tracking-wider">Воздух</span>
+												</div>
+												<span class="text-xl md:text-2xl font-bold font-[family-name:var(--font-raleway)]" style="color: {getAirColor(weather.airQuality)}">
+													{weather.airQuality}
+												</span>
+												<p class="text-[#52525b] text-[10px] md:text-[11px] mt-1">
+													{#if weather.airQuality <= 50}Хорошо{:else if weather.airQuality <= 100}Приемлемо{:else if weather.airQuality <= 150}Умеренно{:else}Плохо{/if}
+												</p>
+											</div>
+										</div>
+									</div>
+								{:else}
+									<div class="text-[#71717a] text-[12px]">Загрузка...</div>
+								{/if}
+							{:else if modalId === 'about'}
+								<!-- About content - точно как в обычной модалке -->
+								<div class="flex flex-col gap-3 md:gap-4">
+									<!-- О себе -->
+									<div class="bento-item p-3 md:p-4">
+										<div class="flex items-center gap-2 mb-2">
+											<Icon icon="mingcute:user-4-line" class="text-[#71717a]" width="14" />
+											<span class="text-[#71717a] text-[10px] md:text-[11px] uppercase tracking-wider">О себе</span>
+										</div>
+										<p class="text-[#a1a1aa] text-[11px] md:text-[13px] leading-relaxed">
+											Специализируюсь на создании веб-платформ для Minecraft проектов, Discord ботов и API сервисов.
+											Создаю функциональные сайты с современным дизайном, автоматизирую процессы через ботов.
+										</p>
+									</div>
+
+									<!-- Навыки -->
+									<div class="bento-item p-3 md:p-4">
+										<div class="flex items-center gap-2 mb-2 md:mb-3">
+											<Icon icon="mingcute:code-line" class="text-[#71717a]" width="14" />
+											<span class="text-[#71717a] text-[10px] md:text-[11px] uppercase tracking-wider">Навыки</span>
+										</div>
+										<div class="flex flex-wrap gap-1.5 md:gap-2">
+											{#each ['Next.js', 'React', 'Svelte', 'TypeScript', 'Bun', 'Node.js', 'TailwindCSS', 'PostgreSQL'] as skill}
+												<span class="px-2 md:px-2.5 py-0.5 md:py-1 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] text-[10px] md:text-[12px]">
+													{skill}
+												</span>
+											{/each}
+										</div>
+									</div>
+
+									<!-- Связаться -->
+									<div class="bento-item p-3 md:p-4">
+										<div class="flex items-center gap-2 mb-2 md:mb-3">
+											<Icon icon="mingcute:mail-line" class="text-[#71717a]" width="14" />
+											<span class="text-[#71717a] text-[10px] md:text-[11px] uppercase tracking-wider">Связаться</span>
+										</div>
+										<div class="flex flex-wrap gap-1.5 md:gap-2">
+											<a href="https://t.me/mkphotoss" target="_blank" class="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] hover:text-[#fafafa] hover:border-white/20 smooth">
+												<Icon icon="mingcute:telegram-line" width="14" />
+												<span class="text-[10px] md:text-[12px]">Telegram</span>
+											</a>
+											<a href="https://discordapp.com/users/{discordUserId}" target="_blank" class="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] hover:text-[#fafafa] hover:border-white/20 smooth">
+												<Icon icon="mingcute:discord-line" width="14" />
+												<span class="text-[10px] md:text-[12px]">Discord</span>
+											</a>
+											<a href="https://github.com/Flowery-arch" target="_blank" class="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg bg-white/5 border border-white/10 text-[#a1a1aa] hover:text-[#fafafa] hover:border-white/20 smooth">
+												<Icon icon="mingcute:github-line" width="14" />
+												<span class="text-[10px] md:text-[12px]">GitHub</span>
+											</a>
+										</div>
+									</div>
+								</div>
+							{/if}
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<!-- Bottom hint -->
+			<div class="mt-4 text-center text-[#52525b] text-[11px]">
+				<span class="text-[#71717a]">ESC</span> — свернуть все • <span class="text-[#71717a]">Двойной клик</span> — развернуть окно
 			</div>
 		</div>
 	</div>

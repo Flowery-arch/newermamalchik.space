@@ -5,6 +5,7 @@ import { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN } from 
 const basic = Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`).toString('base64');
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
 const NOW_PLAYING_ENDPOINT = 'https://api.spotify.com/v1/me/player/currently-playing';
+const PLAYER_ENDPOINT = 'https://api.spotify.com/v1/me/player';
 
 async function getAccessToken() {
 	if (!SPOTIFY_REFRESH_TOKEN) {
@@ -34,6 +35,13 @@ export const GET: RequestHandler = async () => {
 	try {
 		const { access_token } = await getAccessToken();
 
+		// Get current playback state (includes device info)
+		const playerResponse = await fetch(PLAYER_ENDPOINT, {
+			headers: {
+				Authorization: `Bearer ${access_token}`
+			}
+		});
+
 		const response = await fetch(NOW_PLAYING_ENDPOINT, {
 			headers: {
 				Authorization: `Bearer ${access_token}`
@@ -48,6 +56,18 @@ export const GET: RequestHandler = async () => {
 
 		if (!song.item) {
 			return json({ isPlaying: false });
+		}
+
+		// Get device info
+		let deviceName = null;
+		let volumePercent = null;
+
+		if (playerResponse.status === 200) {
+			const playerData = await playerResponse.json();
+			if (playerData.device) {
+				deviceName = playerData.device.name;
+				volumePercent = playerData.device.volume_percent;
+			}
 		}
 
 		const isPlaying = song.is_playing;
@@ -67,7 +87,9 @@ export const GET: RequestHandler = async () => {
 			albumImageUrl,
 			songUrl,
 			progress,
-			duration
+			duration,
+			deviceName,
+			volumePercent
 		});
 	} catch {
 		return json({ isPlaying: false, error: true });
